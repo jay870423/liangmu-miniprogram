@@ -1,0 +1,52 @@
+/* 个人中心 */
+.page { background: #f5f5f5; min-height: 100vh; }
+
+.user-section {
+  background: linear-gradient(135deg, #2d5a27 0%, #3d7a37 100%);
+  padding: 48rpx 32rpx 32rpx;
+}
+.user-info { display: flex; align-items: center; gap: 24rpx; }
+.avatar { width: 120rpx; height: 120rpx; border-radius: 50%; border: 4rpx solid rgba(255,255,255,0.3); }
+.user-text { display: flex; flex-direction: column; gap: 8rpx; }
+.nickname { font-size: 36rpx; font-weight: 700; color: #fff; }
+.user-id { font-size: 22rpx; color: rgba(255,255,255,0.7); }
+
+.user-stats { display: flex; align-items: center; margin-top: 32rpx; background: rgba(255,255,255,0.1); border-radius: 16rpx; padding: 20rpx 0; }
+.stat-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4rpx; }
+.stat-num { font-size: 36rpx; font-weight: 700; color: #fff; }
+.stat-label { font-size: 22rpx; color: rgba(255,255,255,0.8); }
+.stat-div { width: 1rpx; height: 48rpx; background: rgba(255,255,255,0.2); }
+
+.order-bar { background: #fff; margin: 20rpx 0; }
+.order-title { padding: 24rpx 32rpx 0; font-size: 28rpx; font-weight: 600; color: #1a1a1a; }
+.order-tabs { display: flex; padding: 20rpx 16rpx; }
+.tab-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8rpx;
+  position: relative; padding: 8rpx 0;
+}
+.tab-icon { font-size: 40rpx; }
+.tab-name { font-size: 22rpx; color: #666; margin-top: 4rpx; }
+.tab-badge {
+  position: absolute; top: 0; right: calc(50% - 28rpx);
+  background: #c8391d; color: #fff;
+  font-size: 18rpx; padding: 2rpx 8rpx; border-radius: 20rpx;
+  min-width: 32rpx; text-align: center;
+}
+
+.menu-section { background: #fff; }
+.menu-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 28rpx 32rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+.menu-left { display: flex; align-items: center; gap: 16rpx; }
+.menu-icon { font-size: 36rpx; }
+.menu-label { font-size: 28rpx; color: #1a1a1a; }
+.menu-arrow { font-size: 32rpx; color: #ccc; }
+
+.logout-btn {
+  margin: 40rpx 32rpx;
+  background: #fff; color: #666;
+  text-align: center; padding: 28rpx 0;
+  border-radius: 16rpx; font-size: 28rpx;
+}

@@ -1,0 +1,69 @@
+<view class="page">
+  <!-- 商品图片轮播 -->
+  <swiper class="image-swiper" indicator-dots autoplay circular>
+    <swiper-item wx:for="{{product.images}}" wx:key="index">
+      <image class="prod-img" src="{{item}}" mode="aspectFill" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 价格信息 -->
+  <view class="price-section">
+    <view class="price-wrap">
+      <text class="price">¥{{product.price / 100}}</text>
+      <text class="ori-price" wx:if="{{product.original_price > product.price}}">¥{{product.original_price / 100}}</text>
+    </view>
+    <view class="sales-info">
+      <text>销量 {{product.sales || 0}}</text>
+      <text>⭐ {{product.rating || 5.0}}</text>
+      <text wx:if="{{product.stock > 0}}">库存{{product.stock}}</text>
+      <text wx:else class="sold-out">已售罄</text>
+    </view>
+  </view>
+
+  <!-- 商品名称 -->
+  <view class="name-section">
+    <text class="prod-name">{{product.name}}</text>
+    <text class="prod-sub">{{product.subtitle}}</text>
+  </view>
+
+  <!-- 规格选择 -->
+  <view class="spec-section" wx:if="{{product.specs && product.specs.length > 0}}">
+    <view class="spec-title">选择规格</view>
+    <view class="spec-list">
+      <view
+        class="spec-item {{selectedSpecIndex === index ? 'selected' : ''}}"
+        wx:for="{{product.specs}}"
+        wx:key="index"
+        bindtap="selectSpec"
+        data-index="{{index}}"
+      >
+        {{item.name}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 商品详情 -->
+  <view class="detail-section">
+    <view class="detail-title">商品详情</view>
+    <rich-text class="detail-content" nodes="{{product.description}}"></rich-text>
+    <image class="detail-img" wx:for="{{product.detail_images}}" wx:key="index" src="{{item}}" mode="widthFix" />
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <view class="action-icons">
+      <view class="action-icon" bindtap="toggleFavorite">
+        <text>{{isFavorite ? '❤️' : '🤍'}}</text>
+        <text class="icon-label">收藏</text>
+      </view>
+      <view class="action-icon" bindtap="goCart">
+        <text>🛒</text>
+        <text class="icon-label">购物车</text>
+      </view>
+    </view>
+    <view class="action-btns">
+      <view class="btn-add-cart" bindtap="onAddCart">加入购物车</view>
+      <view class="btn-buy-now" bindtap="onBuyNow">立即购买</view>
+    </view>
+  </view>
+</view>

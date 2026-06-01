@@ -1,0 +1,49 @@
+<view class="page">
+  <!-- 用户区 -->
+  <view class="user-section">
+    <view class="user-info" bindtap="onLogin">
+      <image class="avatar" src="{{userInfo.avatar || '/assets/avatar-default.png'}}" mode="aspectFill" />
+      <view class="user-text">
+        <text class="nickname">{{userInfo.nickname || '点击登录'}}</text>
+        <text class="user-id" wx:if="{{userInfo}}">ID: {{userInfo.id}}</text>
+      </view>
+    </view>
+    <view class="user-stats" wx:if="{{userInfo}}">
+      <view class="stat-item">
+        <text class="stat-num">{{userInfo.points || 0}}</text>
+        <text class="stat-label">积分</text>
+      </view>
+      <view class="stat-div"></view>
+      <view class="stat-item" bindtap="goCoupons">
+        <text class="stat-num">{{couponCount || 0}}</text>
+        <text class="stat-label">优惠券</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 订单快捷 -->
+  <view class="order-bar">
+    <view class="order-title">📋 我的订单</view>
+    <view class="order-tabs">
+      <view class="tab-item" wx:for="{{orderTabs}}" wx:key="status" bindtap="goOrderList" data-status="{{item.status}}">
+        <text class="tab-icon">{{item.icon}}</text>
+        <text class="tab-name">{{item.label}}</text>
+        <view class="tab-badge" wx:if="{{orderCounts[item.status] > 0}}">{{orderCounts[item.status] > 99 ? '99+' : orderCounts[item.status]}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <view class="menu-item" wx:for="{{menuItems}}" wx:key="id" bindtap="onMenuTap" data-id="{{item.id}}">
+      <view class="menu-left">
+        <text class="menu-icon">{{item.icon}}</text>
+        <text class="menu-label">{{item.label}}</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-btn" wx:if="{{userInfo}}" bindtap="onLogout">退出登录</view>
+</view>

@@ -1,0 +1,80 @@
+<view class="page">
+  <!-- 顶部搜索 -->
+  <view class="top-search">
+    <view class="search-bar" bindtap="goSearch">
+      <text class="icon">🔍</text>
+      <text class="txt">搜索商品</text>
+    </view>
+    <view class="msg-btn" bindtap="goMessages">
+      <text>💬</text>
+    </view>
+  </view>
+
+  <!-- 轮播 -->
+  <swiper class="banner" indicator-dots autoplay circular indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#fff">
+    <swiper-item wx:for="{{banners}}" wx:key="id">
+      <image class="banner-img" src="{{item.image}}" mode="aspectFill" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 分类4宫格 -->
+  <view class="cate-4grid">
+    <view class="cate-cell" wx:for="{{categories}}" wx:key="id" bindtap="goCategory" data-id="{{item.id}}">
+      <view class="cate-icon-wrap">
+        <text class="cate-icon">{{item.icon || '📦'}}</text>
+      </view>
+      <text class="cate-name">{{item.name}}</text>
+    </view>
+  </view>
+
+  <!-- 新品上市 -->
+  <view class="section">
+    <view class="section-hd">
+      <text class="section-title">🆕 新品上市</text>
+      <view class="section-more" bindtap="goNewProducts">
+        <text>更多</text><text class="ar">›</text>
+      </view>
+    </view>
+    <scroll-view class="h-scroll" scroll-x>
+      <view class="h-scroll-inner">
+        <view class="prod-card" wx:for="{{newProducts}}" wx:key="id" bindtap="goProduct" data-id="{{item.id}}">
+          <image class="prod-img" src="{{item.main_image}}" mode="aspectFill" />
+          <view class="prod-info">
+            <text class="prod-name">{{item.name}}</text>
+            <view class="prod-price-row">
+              <text class="price">¥{{item.price / 100}}</text>
+              <text class="sold">已售{{item.sales || 0}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="prod-card empty-card" wx:if="{{newProducts.length === 0}}">
+          <text>暂无商品</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 精选推荐 -->
+  <view class="section">
+    <view class="section-hd">
+      <text class="section-title">⭐ 精选推荐</text>
+      <view class="section-more" bindtap="goRecommendProducts">
+        <text>更多</text><text class="ar">›</text>
+      </view>
+    </view>
+    <view class="prod-grid">
+      <view class="g-cell" wx:for="{{recommendProducts}}" wx:key="id" bindtap="goProduct" data-id="{{item.id}}">
+        <image class="g-img" src="{{item.main_image}}" mode="aspectFill" />
+        <view class="g-info">
+          <text class="g-name">{{item.name}}</text>
+          <text class="g-sub">{{item.subtitle}}</text>
+          <view class="g-bottom">
+            <text class="g-price">¥{{item.price / 100}}</text>
+            <text class="g-ori">¥{{item.original_price / 100}}</text>
+          </view>
+          <view class="g-sales"><text>已售{{item.sales || 0}}</text><text>⭐{{item.rating || 5.0}}</text></view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

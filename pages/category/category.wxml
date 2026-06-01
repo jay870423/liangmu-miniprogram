@@ -1,0 +1,53 @@
+<view class="page">
+  <!-- 左侧分类 -->
+  <view class="left-panel">
+    <scroll-view class="left-scroll" scroll-y>
+      <view
+        class="cate-item {{currentCateId === item.id ? 'active' : ''}}"
+        wx:for="{{categories}}"
+        wx:key="id"
+        bindtap="switchCate"
+        data-id="{{item.id}}"
+      >
+        <text class="cate-icon">{{item.icon || '📦'}}</text>
+        <text class="cate-name">{{item.name}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 右侧商品 -->
+  <view class="right-panel">
+    <view class="right-hd">
+      <text class="right-title">{{currentCateName}}</text>
+      <text class="right-count">共{{total}}件</text>
+    </view>
+    <scroll-view class="right-scroll" scroll-y bindscrolltolower="loadMore">
+      <view class="product-list" wx:if="{{products.length > 0}}">
+        <view class="list-item" wx:for="{{products}}" wx:key="id" bindtap="goProduct" data-id="{{item.id}}">
+          <image class="item-img" src="{{item.main_image}}" mode="aspectFill" />
+          <view class="item-info">
+            <text class="item-name">{{item.name}}</text>
+            <text class="item-sub">{{item.subtitle}}</text>
+            <view class="item-bottom">
+              <view class="item-price-wrap">
+                <text class="item-price">¥{{item.price / 100}}</text>
+                <text class="item-ori">¥{{item.original_price / 100}}</text>
+              </view>
+              <text class="item-sales">已售{{item.sales || 0}}</text>
+            </view>
+          </view>
+          <view class="item-add-btn" catchtap="onAddCart" data-item="{{item}}">+</view>
+        </view>
+      </view>
+      <view class="empty" wx:if="{{loaded && products.length === 0}}">
+        <text>该分类暂无商品</text>
+      </view>
+      <view class="loading" wx:if="{{loading}}">
+        <text>加载中...</text>
+      </view>
+      <view class="no-more" wx:if="{{loaded && products.length > 0 && !hasMore}}">
+        <text>— 没有更多了 —</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>
