@@ -1,0 +1,10 @@
+<view class="page">
+  <view class="section" wx:for="{{faqs}}" wx:key="title">
+    <view class="question">{{item.title}}</view>
+    <view class="answer">{{item.answer}}</view>
+  </view>
+  <view class="contact">
+    <text class="contact-title">仍需帮助？</text>
+    <text class="contact-text">可在订单详情中联系商家，或通过小程序客服消息咨询。</text>
+  </view>
+</view>

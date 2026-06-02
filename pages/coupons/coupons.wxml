@@ -1,0 +1,29 @@
+<view class="page">
+  <view class="tabs">
+    <view class="tab {{currentTab === item.value ? 'active' : ''}}" wx:for="{{tabs}}" wx:key="value" bindtap="switchTab" data-value="{{item.value}}">
+      {{item.label}}
+    </view>
+  </view>
+
+  <scroll-view class="list" scroll-y>
+    <view class="coupon {{item.statusClass}}" wx:for="{{items}}" wx:key="id">
+      <view class="amount">
+        <text class="symbol">¥</text>
+        <text class="num">{{item.amountText}}</text>
+      </view>
+      <view class="detail">
+        <text class="name">{{item.name}}</text>
+        <text class="rule">满{{item.minText}}元可用</text>
+        <text class="date">有效期至 {{item.endText}}</text>
+      </view>
+      <view class="receive" wx:if="{{currentTab === 'available' && !item.has_received}}" bindtap="receiveItem" data-id="{{item.id}}">领取</view>
+      <view class="state" wx:else>{{item.stateText}}</view>
+    </view>
+
+    <view class="empty" wx:if="{{loaded && items.length === 0}}">
+      <text class="empty-icon">🎫</text>
+      <text class="empty-text">暂无优惠券</text>
+    </view>
+    <view class="loading" wx:if="{{loading}}">加载中...</view>
+  </scroll-view>
+</view>

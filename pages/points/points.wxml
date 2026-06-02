@@ -1,0 +1,35 @@
+<view class="page">
+  <view class="summary">
+    <view>
+      <text class="label">可用积分</text>
+      <text class="num">{{summary.available_points || 0}}</text>
+    </view>
+    <view>
+      <text class="label">累计积分</text>
+      <text class="num small">{{summary.total_points || 0}}</text>
+    </view>
+    <view>
+      <text class="label">可抵扣</text>
+      <text class="num small">¥{{summary.points_value || 0}}</text>
+    </view>
+  </view>
+
+  <scroll-view class="list" scroll-y bindscrolltolower="loadMore">
+    <view class="row" wx:for="{{items}}" wx:key="id">
+      <view class="left">
+        <text class="title">{{item.note || item.typeText}}</text>
+        <text class="time">{{item.createdText}}</text>
+      </view>
+      <view class="right">
+        <text class="points {{item.points >= 0 ? 'plus' : 'minus'}}">{{item.points >= 0 ? '+' : ''}}{{item.points}}</text>
+        <text class="balance">余额 {{item.balance}}</text>
+      </view>
+    </view>
+    <view class="empty" wx:if="{{loaded && items.length === 0}}">
+      <text class="empty-icon">💎</text>
+      <text class="empty-text">暂无积分记录</text>
+    </view>
+    <view class="loading" wx:if="{{loading}}">加载中...</view>
+    <view class="no-more" wx:if="{{loaded && items.length > 0 && !hasMore}}">— 没有更多了 —</view>
+  </scroll-view>
+</view>

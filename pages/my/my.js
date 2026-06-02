@@ -82,18 +82,18 @@ Page({
   },
 
   goCoupons() {
-    wx.navigateTo({ url: '/pages/orders/orders?type=coupons' })
+    wx.navigateTo({ url: '/pages/coupons/coupons' })
   },
 
   onMenuTap(e) {
     const id = e.currentTarget.dataset.id
     const pages = {
-      favorites: '/pages/orders/orders?type=favorites',
-      addresses: '/pages/orders/orders?type=addresses',
-      coupons: '/pages/orders/orders?type=coupons',
-      points: '/pages/orders/orders?type=points',
-      help: '/pages/orders/orders?type=help',
-      about: '/pages/orders/orders?type=about',
+      favorites: '/pages/favorites/favorites',
+      addresses: '/pages/addresses/addresses',
+      coupons: '/pages/coupons/coupons',
+      points: '/pages/points/points',
+      help: '/pages/help/help',
+      about: '/pages/about/about',
     }
     if (pages[id]) wx.navigateTo({ url: pages[id] })
   },

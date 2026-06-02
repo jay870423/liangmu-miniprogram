@@ -1,0 +1,24 @@
+<view class="page">
+  <view class="brand">
+    <view class="logo">木</view>
+    <text class="name">小吉微商城</text>
+    <text class="desc">专注海南黄花梨、沉香、紫檀手串与木制工艺品。</text>
+  </view>
+
+  <view class="panel">
+    <view class="row">
+      <text class="label">经营理念</text>
+      <text class="value">甄选良木，用心服务</text>
+    </view>
+    <view class="row">
+      <text class="label">商品范围</text>
+      <text class="value">文玩手串、木制摆件、香品与工艺礼品</text>
+    </view>
+    <view class="row">
+      <text class="label">服务说明</text>
+      <text class="value">订单、地址、优惠券和积分均可在个人中心查看管理</text>
+    </view>
+  </view>
+
+  <view class="footer">感谢使用小吉微商城</view>
+</view>

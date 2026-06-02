@@ -68,6 +68,8 @@ const updateCartItem = (id, data) => request(`/cart/${id}`, 'PUT', data, true)
 const removeCartItem = (id) => request(`/cart/${id}`, 'DELETE', null, true)
 
 // 收藏
+const getFavorites = (page = 1, pageSize = 20) =>
+  request(`/favorites?page=${page}&page_size=${pageSize}`, 'GET', null, true)
 const addFavorite = (productId) => request('/favorites', 'POST', { product_id: productId }, true)
 const removeFavorite = (productId) => request(`/favorites/${productId}`, 'DELETE', null, true)
 
@@ -84,7 +86,9 @@ const deleteAddress = (id) => request(`/addresses/${id}`, 'DELETE', null, true)
 const setDefaultAddress = (id) => request(`/addresses/${id}/default`, 'PUT', null, true)
 
 // 优惠券
-const getMyCoupons = () => request('/coupons/mine', 'GET', null, true)
+const getAvailableCoupons = () => request('/coupons', 'GET', null, true)
+const getMyCoupons = (status = 'unused') => request(`/user/coupons?status=${status}`, 'GET', null, true)
+const receiveCoupon = (couponId) => request(`/user/coupons/${couponId}/receive`, 'POST', null, true)
 
 // 用户
 const wxLogin = (code) => request('/user/login', 'POST', { code }, false)
@@ -92,8 +96,9 @@ const getUserInfo = () => request('/user/info', 'GET', null, true)
 const updateUserInfo = (data) => request('/user/info', 'PUT', data, true)
 
 // 积分
-const getPoints = () => request('/points', 'GET', null, true)
-const getPointsHistory = () => request('/points/history', 'GET', null, true)
+const getPoints = () => request('/user/points', 'GET', null, true)
+const getPointsHistory = (page = 1, pageSize = 20) =>
+  request(`/points/log?page=${page}&page_size=${pageSize}`, 'GET', null, true)
 
 module.exports = {
   normalizeAssetUrl,
@@ -101,10 +106,10 @@ module.exports = {
   getCategories, getCategoryProducts,
   getProductDetail, searchProducts,
   getCart, addCart, updateCartItem, removeCartItem,
-  addFavorite, removeFavorite,
+  getFavorites, addFavorite, removeFavorite,
   getOrders, createOrder,
   getAddresses, addAddress, updateAddress, deleteAddress, setDefaultAddress,
-  getMyCoupons,
+  getAvailableCoupons, getMyCoupons, receiveCoupon,
   wxLogin, getUserInfo, updateUserInfo,
   getPoints, getPointsHistory,
 }

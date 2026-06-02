@@ -7,7 +7,13 @@
     "pages/my/my",
     "pages/orders/orders",
     "pages/search/search",
-    "pages/webview/webview"
+    "pages/webview/webview",
+    "pages/favorites/favorites",
+    "pages/addresses/addresses",
+    "pages/coupons/coupons",
+    "pages/points/points",
+    "pages/help/help",
+    "pages/about/about"
   ],
   "window": {
     "navigationBarTitleText": "小吉",

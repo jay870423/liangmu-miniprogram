@@ -1,0 +1,23 @@
+<view class="page">
+  <scroll-view class="list" scroll-y bindscrolltolower="loadMore">
+    <view class="card" wx:for="{{items}}" wx:key="favorite_id">
+      <image class="thumb" src="{{item.image}}" mode="aspectFill" bindtap="goProduct" data-id="{{item.id}}" />
+      <view class="info" bindtap="goProduct" data-id="{{item.id}}">
+        <text class="name">{{item.name}}</text>
+        <text class="sub">{{item.subtitle || '良木精选商品'}}</text>
+        <view class="meta">
+          <text class="price">¥{{item.priceText}}</text>
+          <text class="sales">已售{{item.sales_count || 0}}</text>
+        </view>
+      </view>
+      <view class="remove" catchtap="removeItem" data-id="{{item.favorite_id}}">取消</view>
+    </view>
+
+    <view class="empty" wx:if="{{loaded && items.length === 0}}">
+      <text class="empty-icon">❤️</text>
+      <text class="empty-text">还没有收藏商品</text>
+    </view>
+    <view class="loading" wx:if="{{loading}}">加载中...</view>
+    <view class="no-more" wx:if="{{loaded && items.length > 0 && !hasMore}}">— 没有更多了 —</view>
+  </scroll-view>
+</view>
