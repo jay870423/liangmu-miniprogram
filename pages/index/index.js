@@ -1,4 +1,10 @@
-const { getHomeBanners, getHomeCategories, getHomeNew, getHomeRecommend } = require('../../utils/request')
+const {
+  normalizeAssetUrl,
+  getHomeBanners,
+  getHomeCategories,
+  getHomeNew,
+  getHomeRecommend,
+} = require('../../utils/request')
 
 Page({
   data: {
@@ -22,8 +28,22 @@ Page({
         getHomeNew(),
         getHomeRecommend(),
       ])
-      if (bannersRes.code === 0) this.setData({ banners: bannersRes.data.items })
-      if (categoriesRes.code === 0) this.setData({ categories: categoriesRes.data.items })
+      if (bannersRes.code === 0) {
+        this.setData({
+          banners: (bannersRes.data.items || []).map(item => ({
+            ...item,
+            image: normalizeAssetUrl(item.image),
+          })),
+        })
+      }
+      if (categoriesRes.code === 0) {
+        this.setData({
+          categories: (categoriesRes.data.items || []).map(item => ({
+            ...item,
+            iconUrl: normalizeAssetUrl(item.icon_url || item.icon),
+          })),
+        })
+      }
       if (newRes.code === 0) this.setData({ newProducts: newRes.data.items })
       if (recommendRes.code === 0) this.setData({ recommendProducts: recommendRes.data.items })
     } catch (e) {
@@ -39,7 +59,8 @@ Page({
   },
   goCategory(e) {
     const id = e.currentTarget.dataset.id
-    wx.navigateTo({ url: `/pages/category/category?id=${id}` })
+    wx.setStorageSync('selectedCategoryId', id)
+    wx.switchTab({ url: '/pages/category/category' })
   },
   goAllCategory() {
     wx.switchTab({ url: '/pages/category/category' })

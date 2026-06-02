@@ -56,7 +56,8 @@
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.08);
 }
-.cate-icon { font-size: 40rpx; }
+.cate-icon { width: 48rpx; height: 48rpx; display: block; }
+.cate-icon-placeholder { font-size: 40rpx; line-height: 1; }
 .cate-name { font-size: 24rpx; color: #333; font-weight: 600; }
 
 /* 区块通用 */

@@ -21,7 +21,8 @@
   <view class="cate-4grid">
     <view class="cate-cell" wx:for="{{categories}}" wx:key="id" bindtap="goCategory" data-id="{{item.id}}">
       <view class="cate-icon-wrap">
-        <text class="cate-icon">{{item.icon || '📦'}}</text>
+        <image wx:if="{{item.iconUrl}}" class="cate-icon" src="{{item.iconUrl}}" mode="aspectFit" />
+        <text wx:else class="cate-icon-placeholder">📦</text>
       </view>
       <text class="cate-name">{{item.name}}</text>
     </view>

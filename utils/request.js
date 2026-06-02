@@ -1,4 +1,13 @@
-const BASE_URL = 'https://api.zhouyuaninfo.com.cn/api/v1'
+const API_ORIGIN = 'https://api.zhouyuaninfo.com.cn'
+const BASE_URL = `${API_ORIGIN}/api/v1`
+
+function normalizeAssetUrl(url) {
+  if (!url) return ''
+  if (/^https?:\/\//i.test(url)) return url
+  if (url.startsWith('//')) return `https:${url}`
+  if (url.startsWith('/')) return `${API_ORIGIN}${url}`
+  return `${API_ORIGIN}/${url}`
+}
 
 function getHeaders(needAuth) {
   const headers = { 'Content-Type': 'application/json' }
@@ -86,6 +95,7 @@ const getPoints = () => request('/points', 'GET', null, true)
 const getPointsHistory = () => request('/points/history', 'GET', null, true)
 
 module.exports = {
+  normalizeAssetUrl,
   getHomeBanners, getHomeCategories, getHomeNew, getHomeRecommend,
   getCategories, getCategoryProducts,
   getProductDetail, searchProducts,

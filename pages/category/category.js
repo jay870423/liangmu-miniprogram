@@ -1,4 +1,4 @@
-const { getCategories, getCategoryProducts } = require('../../utils/request')
+const { normalizeAssetUrl, getCategories, getCategoryProducts } = require('../../utils/request')
 
 Page({
   data: {
@@ -15,23 +15,53 @@ Page({
   },
 
   onLoad(opt) {
-    this.loadCategories()
     if (opt && opt.id) {
       this.setData({ currentCateId: opt.id })
     }
+    this.loadCategories()
+  },
+
+  onShow() {
+    this.applyPendingCategory()
   },
 
   async loadCategories() {
     try {
       const res = await getCategories()
       if (res.code === 0) {
-        this.setData({ categories: res.data.items })
-        if (!this.data.currentCateId && res.data.items.length > 0) {
-          this.setData({ currentCateId: res.data.items[0].id, currentCateName: res.data.items[0].name })
-          this.loadProducts()
+        const categories = (res.data.items || []).map(item => ({
+          ...item,
+          iconUrl: normalizeAssetUrl(item.icon_url || item.icon),
+        }))
+        this.setData({ categories })
+        if (!this.applyPendingCategory() && !this.data.currentCateId && categories.length > 0) {
+          this.selectCategory(categories[0].id)
+        } else if (this.data.currentCateId) {
+          this.selectCategory(this.data.currentCateId)
         }
       }
     } catch (e) { console.error(e) }
+  },
+
+  applyPendingCategory() {
+    const id = wx.getStorageSync('selectedCategoryId')
+    if (!id || this.data.categories.length === 0) return false
+    wx.removeStorageSync('selectedCategoryId')
+    this.selectCategory(id)
+    return true
+  },
+
+  selectCategory(id) {
+    const cate = this.data.categories.find(c => c.id === id)
+    if (!cate) return
+    this.setData({
+      currentCateId: id,
+      currentCateName: cate.name,
+      products: [],
+      page: 1,
+      loaded: false,
+    })
+    this.loadProducts(true)
   },
 
   async loadProducts(reset = false) {
@@ -56,10 +86,8 @@ Page({
 
   switchCate(e) {
     const id = e.currentTarget.dataset.id
-    const cate = this.data.categories.find(c => c.id === id)
     if (id === this.data.currentCateId) return
-    this.setData({ currentCateId: id, currentCateName: cate ? cate.name : '', products: [], page: 1, loaded: false })
-    this.loadProducts(true)
+    this.selectCategory(id)
   },
 
   loadMore() {

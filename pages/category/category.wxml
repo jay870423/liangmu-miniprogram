@@ -9,7 +9,8 @@
         bindtap="switchCate"
         data-id="{{item.id}}"
       >
-        <text class="cate-icon">{{item.icon || '📦'}}</text>
+        <image wx:if="{{item.iconUrl}}" class="cate-icon" src="{{item.iconUrl}}" mode="aspectFit" />
+        <text wx:else class="cate-icon-placeholder">📦</text>
         <text class="cate-name">{{item.name}}</text>
       </view>
     </scroll-view>
