@@ -42,9 +42,20 @@ Page({
 
   onAddCart() {
     const { product, selectedSpecIndex } = this.data
-    addCart({ product_id: product.id, quantity: 1, spec_index: selectedSpecIndex })
+    if (!wx.getStorageSync('token')) {
+      wx.showModal({
+        title: '请先登录',
+        content: '登录后才能加入购物车',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) wx.switchTab({ url: '/pages/my/my' })
+        },
+      })
+      return
+    }
+    addCart({ product_id: product.id, quantity: 1, sku_spec: { spec_index: selectedSpecIndex } })
       .then(() => wx.showToast({ title: '已加入购物车', icon: 'success' }))
-      .catch(() => wx.showToast({ title: '请先登录', icon: 'none' }))
+      .catch((err) => wx.showToast({ title: err.message || '加入失败', icon: 'none' }))
   },
 
   onBuyNow() {

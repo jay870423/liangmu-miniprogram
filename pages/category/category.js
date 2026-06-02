@@ -1,4 +1,4 @@
-const { normalizeAssetUrl, getCategories, getCategoryProducts } = require('../../utils/request')
+const { normalizeAssetUrl, getCategories, getCategoryProducts, addCart } = require('../../utils/request')
 
 Page({
   data: {
@@ -98,7 +98,25 @@ Page({
     wx.navigateTo({ url: `/pages/product/product?id=${e.currentTarget.dataset.id}` })
   },
 
-  onAddCart(e) {
-    wx.showToast({ title: '已添加购物车', icon: 'success' })
+  async onAddCart(e) {
+    const id = e.currentTarget.dataset.id
+    if (!id) return
+    if (!wx.getStorageSync('token')) {
+      wx.showModal({
+        title: '请先登录',
+        content: '登录后才能加入购物车',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) wx.switchTab({ url: '/pages/my/my' })
+        },
+      })
+      return
+    }
+    try {
+      await addCart({ product_id: id, quantity: 1, sku_spec: {} })
+      wx.showToast({ title: '已加入购物车', icon: 'success' })
+    } catch (err) {
+      wx.showToast({ title: err.message || '加入失败', icon: 'none' })
+    }
   },
 })

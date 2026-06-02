@@ -1,4 +1,4 @@
-const { getUserInfo, getMyCoupons } = require('../../utils/request')
+const { wxLogin, getUserInfo, getMyCoupons } = require('../../utils/request')
 
 Page({
   data: {
@@ -29,21 +29,51 @@ Page({
   async loadUserInfo() {
     try {
       const [userRes, couponRes] = await Promise.all([getUserInfo(), getMyCoupons()])
-      if (userRes.code === 0) this.setData({ userInfo: userRes.data })
+      if (userRes.code === 0) {
+        this.setData({
+          userInfo: {
+            id: userRes.data.user_id,
+            nickname: userRes.data.nickname || '微信用户',
+            avatar: userRes.data.avatar_url || '/assets/avatar-default.png',
+            points: userRes.data.available_points || 0,
+            memberLevel: userRes.data.member_level,
+          },
+        })
+      }
       if (couponRes.code === 0) this.setData({ couponCount: couponRes.data.items?.length || 0 })
     } catch (e) {}
   },
 
-  onLogin() {
-    wx.getUserProfile({
-      desc: '用于完善用户资料',
-      success: (res) => {
-        const userInfo = res.userInfo
-        userInfo.avatar = userInfo.avatarUrl
-        this.setData({ userInfo })
+  async onLogin() {
+    try {
+      wx.showLoading({ title: '登录中...', mask: true })
+      const loginRes = await new Promise((resolve, reject) => {
+        wx.login({
+          success: resolve,
+          fail: reject,
+        })
+      })
+      if (!loginRes.code) throw new Error('获取登录凭证失败')
+      const res = await wxLogin(loginRes.code)
+      if (res.code === 0) {
+        const userInfo = {
+          id: res.data.user_id,
+          nickname: res.data.nickname || '微信用户',
+          avatar: res.data.avatar_url || '/assets/avatar-default.png',
+          points: res.data.available_points || 0,
+          memberLevel: res.data.member_level,
+        }
+        wx.setStorageSync('token', res.data.token)
         wx.setStorageSync('userInfo', userInfo)
+        this.setData({ userInfo })
+        wx.showToast({ title: '登录成功', icon: 'success' })
+        this.loadUserInfo()
       }
-    })
+    } catch (e) {
+      wx.showToast({ title: e.message || '登录失败', icon: 'none' })
+    } finally {
+      wx.hideLoading()
+    }
   },
 
   goOrderList(e) {

@@ -26,14 +26,15 @@ function request(url, method = 'GET', data = null, needAuth = false) {
       data,
       header: getHeaders(needAuth),
       success: (res) => {
+        const data = res.data && res.data.detail ? res.data.detail : res.data
         if (res.data && res.data.code === 0) {
           resolve(res.data)
-        } else if (res.data && res.data.code === 1002) {
+        } else if ((data && data.code === 1002) || res.statusCode === 401) {
           wx.removeStorageSync('token')
           wx.showToast({ title: '请重新登录', icon: 'none' })
-          reject(res.data)
+          reject(data || { code: 1002, message: '请重新登录' })
         } else {
-          reject(res.data || { message: '请求失败' })
+          reject(data || { message: '请求失败' })
         }
       },
       fail: (err) => {
@@ -86,7 +87,7 @@ const setDefaultAddress = (id) => request(`/addresses/${id}/default`, 'PUT', nul
 const getMyCoupons = () => request('/coupons/mine', 'GET', null, true)
 
 // 用户
-const wxLogin = (code) => request('/user/wx_login', 'POST', { code }, false)
+const wxLogin = (code) => request('/user/login', 'POST', { code }, false)
 const getUserInfo = () => request('/user/info', 'GET', null, true)
 const updateUserInfo = (data) => request('/user/info', 'PUT', data, true)
 
