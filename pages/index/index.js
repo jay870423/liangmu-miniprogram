@@ -75,9 +75,29 @@ Page({
     wx.navigateTo({ url: '/pages/search/search?type=recommend' })
   },
   onBannerTap(e) {
-    const item = e.currentTarget.dataset.item
-    if (item.link_type === 'product' && item.link_value) {
-      wx.navigateTo({ url: `/pages/product/product?id=${item.link_value}` })
+    const item = this.data.banners[e.currentTarget.dataset.index]
+    if (!item) return
+    const type = String(item.link_type || 'none').toLowerCase()
+    const value = String(item.link_value || '').trim()
+    if (!value || type === 'none') return
+
+    if (type === 'product' || type === 'goods') {
+      wx.navigateTo({ url: `/pages/product/product?id=${value}` })
+      return
     }
+
+    if (type === 'category') {
+      wx.setStorageSync('selectedCategoryId', value)
+      wx.switchTab({ url: '/pages/category/category' })
+      return
+    }
+
+    if (type === 'url' || type === 'link' || type === 'external' || type === 'webview' || type === 'web_view') {
+      const url = /^https?:\/\//i.test(value) ? value : `https://${value}`
+      wx.navigateTo({ url: `/pages/webview/webview?url=${encodeURIComponent(url)}` })
+      return
+    }
+
+    wx.showToast({ title: '暂不支持该跳转类型', icon: 'none' })
   },
 })

@@ -12,7 +12,7 @@
 
   <!-- 轮播 -->
   <swiper class="banner" indicator-dots autoplay circular indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#fff">
-    <swiper-item wx:for="{{banners}}" wx:key="id">
+    <swiper-item wx:for="{{banners}}" wx:key="id" bindtap="onBannerTap" data-index="{{index}}">
       <image class="banner-img" src="{{item.image}}" mode="aspectFill" />
     </swiper-item>
   </swiper>

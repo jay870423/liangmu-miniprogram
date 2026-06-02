@@ -6,7 +6,8 @@
     "pages/cart/cart",
     "pages/my/my",
     "pages/orders/orders",
-    "pages/search/search"
+    "pages/search/search",
+    "pages/webview/webview"
   ],
   "window": {
     "navigationBarTitleText": "小吉",
