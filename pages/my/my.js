@@ -1,4 +1,4 @@
-const { wxLogin, getUserInfo, getMyCoupons } = require('../../utils/request')
+const { wxLogin, bindUserPhone, getUserInfo, getMyCoupons } = require('../../utils/request')
 
 Page({
   data: {
@@ -35,6 +35,7 @@ Page({
             id: userRes.data.user_id,
             nickname: userRes.data.nickname || '微信用户',
             avatar: userRes.data.avatar_url || '/assets/avatar-default.png',
+            phone: userRes.data.phone || '',
             points: userRes.data.available_points || 0,
             memberLevel: userRes.data.member_level,
           },
@@ -60,6 +61,7 @@ Page({
           id: res.data.user_id,
           nickname: res.data.nickname || '微信用户',
           avatar: res.data.avatar_url || '/assets/avatar-default.png',
+          phone: res.data.phone || '',
           points: res.data.available_points || 0,
           memberLevel: res.data.member_level,
         }
@@ -71,6 +73,32 @@ Page({
       }
     } catch (e) {
       wx.showToast({ title: e.message || '登录失败', icon: 'none' })
+    } finally {
+      wx.hideLoading()
+    }
+  },
+
+  async onGetPhoneNumber(e) {
+    if (!wx.getStorageSync('token')) {
+      wx.showToast({ title: '请先登录', icon: 'none' })
+      return
+    }
+    if (e.detail.errMsg !== 'getPhoneNumber:ok' || !e.detail.code) {
+      wx.showToast({ title: '已取消授权', icon: 'none' })
+      return
+    }
+    try {
+      wx.showLoading({ title: '绑定中...', mask: true })
+      const res = await bindUserPhone(e.detail.code)
+      if (res.code === 0) {
+        this.setData({ 'userInfo.phone': res.data.phone || '' })
+        const userInfo = wx.getStorageSync('userInfo') || {}
+        userInfo.phone = res.data.phone || ''
+        wx.setStorageSync('userInfo', userInfo)
+        wx.showToast({ title: '绑定成功', icon: 'success' })
+      }
+    } catch (err) {
+      wx.showToast({ title: err.message || '绑定失败', icon: 'none' })
     } finally {
       wx.hideLoading()
     }

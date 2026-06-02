@@ -6,6 +6,16 @@
       <view class="user-text">
         <text class="nickname">{{userInfo.nickname || '点击登录'}}</text>
         <text class="user-id" wx:if="{{userInfo}}">ID: {{userInfo.id}}</text>
+        <text class="phone-text" wx:if="{{userInfo && userInfo.phone}}">手机号：{{userInfo.phone}}</text>
+        <button
+          wx:if="{{userInfo && !userInfo.phone}}"
+          class="phone-bind-btn"
+          open-type="getPhoneNumber"
+          bindgetphonenumber="onGetPhoneNumber"
+          catchtap
+        >
+          绑定手机号
+        </button>
       </view>
     </view>
     <view class="user-stats" wx:if="{{userInfo}}">

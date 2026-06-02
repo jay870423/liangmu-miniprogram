@@ -92,6 +92,7 @@ const receiveCoupon = (couponId) => request(`/user/coupons/${couponId}/receive`,
 
 // 用户
 const wxLogin = (code) => request('/user/login', 'POST', { code }, false)
+const bindUserPhone = (code) => request('/user/phone', 'POST', { code }, true)
 const getUserInfo = () => request('/user/info', 'GET', null, true)
 const updateUserInfo = (data) => request('/user/info', 'PUT', data, true)
 
@@ -110,6 +111,6 @@ module.exports = {
   getOrders, createOrder,
   getAddresses, addAddress, updateAddress, deleteAddress, setDefaultAddress,
   getAvailableCoupons, getMyCoupons, receiveCoupon,
-  wxLogin, getUserInfo, updateUserInfo,
+  wxLogin, bindUserPhone, getUserInfo, updateUserInfo,
   getPoints, getPointsHistory,
 }
