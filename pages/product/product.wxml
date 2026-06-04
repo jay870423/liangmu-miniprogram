@@ -9,8 +9,8 @@
   <!-- 价格信息 -->
   <view class="price-section">
     <view class="price-wrap">
-      <text class="price">¥{{product.price / 100}}</text>
-      <text class="ori-price" wx:if="{{product.original_price > product.price}}">¥{{product.original_price / 100}}</text>
+      <text class="price">¥{{product.price}}</text>
+      <text class="ori-price" wx:if="{{product.original_price > product.price}}">¥{{product.original_price}}</text>
     </view>
     <view class="sales-info">
       <text>销量 {{product.sales || 0}}</text>

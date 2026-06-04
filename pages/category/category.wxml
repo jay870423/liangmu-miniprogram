@@ -31,8 +31,8 @@
             <text class="item-sub">{{item.subtitle}}</text>
             <view class="item-bottom">
               <view class="item-price-wrap">
-                <text class="item-price">¥{{item.price / 100}}</text>
-                <text class="item-ori">¥{{item.original_price / 100}}</text>
+                <text class="item-price">¥{{item.price}}</text>
+                <text class="item-ori" wx:if="{{item.original_price > item.price}}">¥{{item.original_price}}</text>
               </view>
               <text class="item-sales">已售{{item.sales || 0}}</text>
             </view>

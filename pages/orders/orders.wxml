@@ -24,7 +24,7 @@
         <image class="goods-img" wx:for="{{item.items}}" wx:key="index" wx:for-item="g" src="{{g.product_image}}" mode="aspectFill" />
       </view>
       <view class="order-ft">
-        <text class="order-total">合计: ¥{{item.total_amount / 100}}</text>
+        <text class="order-total">合计: ¥{{item.total_amount}}</text>
         <view class="order-actions">
           <view class="action-btn secondary" wx:if="{{item.status === 0}}" bindtap="cancelOrder" data-id="{{item.id}}">取消</view>
           <view class="action-btn primary" wx:if="{{item.status === 0}}" bindtap="payOrder" data-id="{{item.id}}">去支付</view>

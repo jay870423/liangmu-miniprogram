@@ -2,7 +2,7 @@ const { normalizeProductImages, getFavorites, removeFavorite } = require('../../
 
 function formatPrice(value) {
   const num = Number(value || 0)
-  return num > 100 ? (num / 100).toFixed(2) : num.toFixed(2)
+  return num.toFixed(2)
 }
 
 Page({

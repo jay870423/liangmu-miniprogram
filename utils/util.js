@@ -1,6 +1,7 @@
 // 格式化金额
 function formatPrice(price) {
-  return '¥' + (price / 100).toFixed(2)
+  const amount = Number(price || 0)
+  return '¥' + amount.toFixed(2)
 }
 
 // 格式化日期
