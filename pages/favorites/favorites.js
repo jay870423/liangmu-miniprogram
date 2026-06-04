@@ -1,4 +1,4 @@
-const { getFavorites, removeFavorite } = require('../../utils/request')
+const { normalizeProductImages, getFavorites, removeFavorite } = require('../../utils/request')
 
 function formatPrice(value) {
   const num = Number(value || 0)
@@ -30,7 +30,7 @@ Page({
       const res = await getFavorites(page)
       if (res.code === 0) {
         const rows = (res.data.items || []).map(item => ({
-          ...item,
+          ...normalizeProductImages(item),
           priceText: formatPrice(item.price),
         }))
         this.setData({

@@ -1,5 +1,6 @@
 const {
   normalizeAssetUrl,
+  normalizeProductImages,
   getHomeBanners,
   getHomeCategories,
   getHomeNew,
@@ -44,8 +45,12 @@ Page({
           })),
         })
       }
-      if (newRes.code === 0) this.setData({ newProducts: newRes.data.items })
-      if (recommendRes.code === 0) this.setData({ recommendProducts: recommendRes.data.items })
+      if (newRes.code === 0) {
+        this.setData({ newProducts: (newRes.data.items || []).map(normalizeProductImages) })
+      }
+      if (recommendRes.code === 0) {
+        this.setData({ recommendProducts: (recommendRes.data.items || []).map(normalizeProductImages) })
+      }
     } catch (e) {
       console.error('load data error:', e)
     }

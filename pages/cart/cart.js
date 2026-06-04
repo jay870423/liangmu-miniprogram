@@ -1,4 +1,4 @@
-const { getCart, updateCartItem, removeCartItem } = require('../../utils/request')
+const { normalizeProductImages, getCart, updateCartItem, removeCartItem } = require('../../utils/request')
 
 Page({
   data: {
@@ -17,7 +17,10 @@ Page({
     try {
       const res = await getCart()
       if (res.code === 0) {
-        const items = (res.data.items || []).map(item => ({ ...item, selected: false }))
+        const items = (res.data.items || []).map(item => ({
+          ...normalizeProductImages(item),
+          selected: false,
+        }))
         this.setData({ cartItems: items, loaded: true })
         this.calcTotal()
       }

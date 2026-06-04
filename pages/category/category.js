@@ -1,4 +1,10 @@
-const { normalizeAssetUrl, getCategories, getCategoryProducts, addCart } = require('../../utils/request')
+const {
+  normalizeAssetUrl,
+  normalizeProductImages,
+  getCategories,
+  getCategoryProducts,
+  addCart,
+} = require('../../utils/request')
 
 Page({
   data: {
@@ -71,7 +77,7 @@ Page({
     try {
       const res = await getCategoryProducts(this.data.currentCateId, page, this.data.pageSize)
       if (res.code === 0) {
-        const items = res.data.items || []
+        const items = (res.data.items || []).map(normalizeProductImages)
         this.setData({
           products: reset ? items : [...this.data.products, ...items],
           total: res.data.total || 0,

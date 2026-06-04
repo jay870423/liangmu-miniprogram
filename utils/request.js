@@ -9,6 +9,16 @@ function normalizeAssetUrl(url) {
   return `${API_ORIGIN}/${url}`
 }
 
+function normalizeProductImages(item = {}) {
+  const next = { ...item }
+  if (next.main_image) next.main_image = normalizeAssetUrl(next.main_image)
+  if (next.image) next.image = normalizeAssetUrl(next.image)
+  if (next.product_image) next.product_image = normalizeAssetUrl(next.product_image)
+  if (Array.isArray(next.images)) next.images = next.images.map(normalizeAssetUrl)
+  if (Array.isArray(next.detail_images)) next.detail_images = next.detail_images.map(normalizeAssetUrl)
+  return next
+}
+
 function getHeaders(needAuth) {
   const headers = { 'Content-Type': 'application/json' }
   if (needAuth) {
@@ -102,7 +112,7 @@ const getPointsHistory = (page = 1, pageSize = 20) =>
   request(`/points/log?page=${page}&page_size=${pageSize}`, 'GET', null, true)
 
 module.exports = {
-  normalizeAssetUrl,
+  normalizeAssetUrl, normalizeProductImages,
   getHomeBanners, getHomeCategories, getHomeNew, getHomeRecommend,
   getCategories, getCategoryProducts,
   getProductDetail, searchProducts,

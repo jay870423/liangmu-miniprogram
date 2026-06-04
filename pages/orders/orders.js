@@ -1,4 +1,4 @@
-const { getOrders } = require('../../utils/request')
+const { normalizeProductImages, getOrders } = require('../../utils/request')
 
 Page({
   data: {
@@ -33,7 +33,10 @@ Page({
     try {
       const res = await getOrders(this.data.currentTab, page)
       if (res.code === 0) {
-        const items = res.data.items || []
+        const items = (res.data.items || []).map(order => ({
+          ...order,
+          items: (order.items || []).map(normalizeProductImages),
+        }))
         this.setData({
           orders: reset ? items : [...this.data.orders, ...items],
           page: page + 1,

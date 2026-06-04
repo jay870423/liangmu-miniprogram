@@ -1,4 +1,4 @@
-const { searchProducts } = require('../../utils/request')
+const { normalizeProductImages, searchProducts } = require('../../utils/request')
 
 Page({
   data: {
@@ -37,7 +37,7 @@ Page({
     try {
       const res = await searchProducts(this.data.keyword, this.data.page)
       if (res.code === 0) {
-        const items = res.data.items || []
+        const items = (res.data.items || []).map(normalizeProductImages)
         this.setData({
           products: this.data.page === 1 ? items : [...this.data.products, ...items],
           page: this.data.page + 1,

@@ -5,9 +5,9 @@
       <view class="item-check" bindtap="toggleSelect" data-id="{{item.id}}">
         <text class="check-icon {{item.selected ? 'checked' : ''}}">{{item.selected ? '✅' : '⚪'}}</text>
       </view>
-      <image class="item-img" src="{{item.product.main_image}}" mode="aspectFill" bindtap="goProduct" data-id="{{item.product_id}}" />
+      <image class="item-img" src="{{item.product_image}}" mode="aspectFill" bindtap="goProduct" data-id="{{item.product_id}}" />
       <view class="item-detail">
-        <text class="item-name" bindtap="goProduct" data-id="{{item.product_id}}">{{item.product.name}}</text>
+        <text class="item-name" bindtap="goProduct" data-id="{{item.product_id}}">{{item.product_name}}</text>
         <text class="item-spec" wx:if="{{item.spec_name}}">{{item.spec_name}}</text>
         <view class="item-bottom">
           <text class="item-price">¥{{item.price / 100}}</text>

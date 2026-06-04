@@ -1,4 +1,10 @@
-const { getProductDetail, addCart, addFavorite, removeFavorite } = require('../../utils/request')
+const {
+  normalizeProductImages,
+  getProductDetail,
+  addCart,
+  addFavorite,
+  removeFavorite,
+} = require('../../utils/request')
 
 Page({
   data: { product: {}, images: [], selectedSpecIndex: -1, isFavorite: false },
@@ -11,9 +17,12 @@ Page({
     try {
       const res = await getProductDetail(id)
       if (res.code === 0) {
-        const p = res.data
+        const p = normalizeProductImages(res.data)
         this.setData({
-          product: p,
+          product: {
+            ...p,
+            images: p.images && p.images.length ? p.images : [p.main_image].filter(Boolean),
+          },
           images: p.images && p.images.length ? p.images : [p.main_image].filter(Boolean),
           isFavorite: p.is_favorite,
         })
