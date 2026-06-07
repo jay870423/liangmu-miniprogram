@@ -24,6 +24,10 @@
 .label { width: 150rpx; color: #333; font-size: 26rpx; flex-shrink: 0; }
 input { flex: 1; font-size: 26rpx; }
 textarea { flex: 1; min-height: 150rpx; font-size: 26rpx; }
+.region-field { position: relative; }
+.region-value { flex: 1; min-width: 0; color: #1f2933; font-size: 26rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.region-value.placeholder { color: #b8b8b8; }
+.chevron { margin-left: 16rpx; color: #9aa0a6; font-size: 40rpx; line-height: 1; }
 .switch-row { display: flex; align-items: center; justify-content: space-between; padding: 24rpx; font-size: 26rpx; color: #333; }
 .bottom-bar { position: fixed; left: 0; right: 0; bottom: 0; display: flex; gap: 16rpx; padding: 20rpx 24rpx; background: #fff; box-shadow: 0 -4rpx 16rpx rgba(0,0,0,0.06); }
 .btn { flex: 1; height: 80rpx; border-radius: 40rpx; display: flex; align-items: center; justify-content: center; font-size: 28rpx; font-weight: 600; }

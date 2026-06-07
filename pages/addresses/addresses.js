@@ -17,6 +17,11 @@ const emptyForm = {
   is_default: false,
 }
 
+function regionText(form = {}) {
+  const parts = [form.province, form.city, form.district].filter(Boolean)
+  return parts.length ? parts.join(' ') : ''
+}
+
 Page({
   data: {
     items: [],
@@ -24,6 +29,7 @@ Page({
     showForm: false,
     fromCheckout: false,
     form: { ...emptyForm },
+    regionText: '',
   },
 
   onLoad(opt = {}) {
@@ -32,6 +38,7 @@ Page({
       fromCheckout,
       showForm: fromCheckout,
       form: { ...emptyForm, is_default: fromCheckout },
+      regionText: '',
     })
   },
 
@@ -53,12 +60,12 @@ Page({
   },
 
   addItem() {
-    this.setData({ showForm: true, form: { ...emptyForm } })
+    this.setData({ showForm: true, form: { ...emptyForm }, regionText: '' })
   },
 
   editItem(e) {
     const item = this.data.items[e.currentTarget.dataset.index]
-    this.setData({ showForm: true, form: { ...item } })
+    this.setData({ showForm: true, form: { ...item }, regionText: regionText(item) })
   },
 
   closeForm() {
@@ -66,7 +73,7 @@ Page({
       wx.navigateBack()
       return
     }
-    this.setData({ showForm: false, form: { ...emptyForm } })
+    this.setData({ showForm: false, form: { ...emptyForm }, regionText: '' })
   },
 
   onInput(e) {
@@ -76,6 +83,16 @@ Page({
 
   onDefaultChange(e) {
     this.setData({ 'form.is_default': e.detail.value })
+  },
+
+  onRegionChange(e) {
+    const [province, city, district] = e.detail.value || []
+    this.setData({
+      'form.province': province || '',
+      'form.city': city || '',
+      'form.district': district || '',
+      regionText: [province, city, district].filter(Boolean).join(' '),
+    })
   },
 
   async saveForm() {

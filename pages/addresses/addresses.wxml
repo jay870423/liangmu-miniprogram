@@ -29,18 +29,17 @@
       <text class="label">手机号</text>
       <input value="{{form.phone}}" data-field="phone" bindinput="onInput" placeholder="请输入手机号" type="number" />
     </view>
-    <view class="field">
-      <text class="label">省份</text>
-      <input value="{{form.province}}" data-field="province" bindinput="onInput" placeholder="如：海南省" />
-    </view>
-    <view class="field">
-      <text class="label">城市</text>
-      <input value="{{form.city}}" data-field="city" bindinput="onInput" placeholder="如：海口市" />
-    </view>
-    <view class="field">
-      <text class="label">区县</text>
-      <input value="{{form.district}}" data-field="district" bindinput="onInput" placeholder="如：美兰区" />
-    </view>
+    <picker
+      mode="region"
+      value="{{[form.province, form.city, form.district]}}"
+      bindchange="onRegionChange"
+    >
+      <view class="field region-field">
+        <text class="label">所在地区</text>
+        <text class="region-value {{regionText ? '' : 'placeholder'}}">{{regionText || '请选择省 / 市 / 区'}}</text>
+        <text class="chevron">›</text>
+      </view>
+    </picker>
     <view class="field area">
       <text class="label">详细地址</text>
       <textarea value="{{form.detail_address}}" data-field="detail_address" bindinput="onInput" placeholder="街道、门牌号等" />
