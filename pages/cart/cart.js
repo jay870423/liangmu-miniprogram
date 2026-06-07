@@ -1,10 +1,11 @@
-const { normalizeProductImages, getCart, updateCartItem, removeCartItem } = require('../../utils/request')
+const { normalizeProductImages, formatMoney, getCart, updateCartItem, removeCartItem } = require('../../utils/request')
 
 Page({
   data: {
     cartItems: [],
     selectAll: false,
     totalPrice: 0,
+    totalPriceText: '0.00',
     selectedCount: 0,
     loaded: false,
   },
@@ -77,12 +78,12 @@ Page({
     let total = 0, count = 0
     this.data.cartItems.forEach(item => {
       if (item.selected) {
-        total += item.price * item.quantity
+        total += Number(item.price || 0) * Number(item.quantity || 1)
         count++
       }
     })
     const all = this.data.cartItems.length > 0 && this.data.cartItems.every(i => i.selected)
-    this.setData({ totalPrice: total, selectedCount: count, selectAll: all })
+    this.setData({ totalPrice: total, totalPriceText: formatMoney(total), selectedCount: count, selectAll: all })
   },
 
   goProduct(e) {

@@ -14,7 +14,7 @@
           <text class="result-name">{{item.name}}</text>
           <text class="result-sub">{{item.subtitle}}</text>
           <view class="result-bottom">
-            <text class="result-price">¥{{item.price}}</text>
+            <text class="result-price">¥{{item.price_text}}</text>
             <text class="result-sales">已售{{item.sales || 0}}</text>
           </view>
         </view>

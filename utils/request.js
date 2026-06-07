@@ -9,6 +9,11 @@ function normalizeAssetUrl(url) {
   return `${API_ORIGIN}/${url}`
 }
 
+function formatMoney(value) {
+  const num = Number(value || 0)
+  return Number.isFinite(num) ? num.toFixed(2) : '0.00'
+}
+
 function normalizeProductImages(item = {}) {
   const next = { ...item }
   if (next.main_image) next.main_image = normalizeAssetUrl(next.main_image)
@@ -16,6 +21,17 @@ function normalizeProductImages(item = {}) {
   if (next.product_image) next.product_image = normalizeAssetUrl(next.product_image)
   if (Array.isArray(next.images)) next.images = next.images.map(normalizeAssetUrl)
   if (Array.isArray(next.detail_images)) next.detail_images = next.detail_images.map(normalizeAssetUrl)
+  if (next.price !== undefined) {
+    next.price_value = Number(next.price || 0)
+    next.price_text = formatMoney(next.price)
+  }
+  if (next.original_price !== undefined) {
+    next.original_price_value = Number(next.original_price || 0)
+    next.original_price_text = formatMoney(next.original_price)
+  }
+  if (next.subtotal !== undefined) {
+    next.subtotal_text = formatMoney(next.subtotal)
+  }
   return next
 }
 
@@ -116,6 +132,7 @@ const getPointsHistory = (page = 1, pageSize = 20) =>
 
 module.exports = {
   normalizeAssetUrl,
+  formatMoney,
   normalizeProductImages,
   getHomeBanners,
   getHomeCategories,

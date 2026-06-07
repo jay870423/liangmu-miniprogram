@@ -43,7 +43,7 @@
           <view class="prod-info">
             <text class="prod-name">{{item.name}}</text>
             <view class="prod-price-row">
-              <text class="price">¥{{item.price}}</text>
+              <text class="price">¥{{item.price_text}}</text>
               <text class="sold">已售{{item.sales || 0}}</text>
             </view>
           </view>
@@ -70,8 +70,8 @@
           <text class="g-name">{{item.name}}</text>
           <text class="g-sub">{{item.subtitle}}</text>
           <view class="g-bottom">
-            <text class="g-price">¥{{item.price}}</text>
-            <text class="g-ori" wx:if="{{item.original_price > item.price}}">¥{{item.original_price}}</text>
+            <text class="g-price">¥{{item.price_text}}</text>
+            <text class="g-ori" wx:if="{{item.original_price_value > item.price_value}}">¥{{item.original_price_text}}</text>
           </view>
           <view class="g-sales"><text>已售{{item.sales || 0}}</text><text>⭐{{item.rating || 5.0}}</text></view>
         </view>

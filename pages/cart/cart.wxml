@@ -10,7 +10,7 @@
         <text class="item-name" bindtap="goProduct" data-id="{{item.product_id}}">{{item.product_name}}</text>
         <text class="item-spec" wx:if="{{item.spec_name}}">{{item.spec_name}}</text>
         <view class="item-bottom">
-          <text class="item-price">¥{{item.price}}</text>
+          <text class="item-price">¥{{item.price_text}}</text>
           <view class="qty-ctrl">
             <view class="qty-btn" bindtap="decreaseQty" data-id="{{item.id}}">−</view>
             <text class="qty-num">{{item.quantity}}</text>
@@ -39,7 +39,7 @@
     </view>
     <view class="total-wrap">
       <text class="total-label">合计：</text>
-      <text class="total-price">¥{{totalPrice}}</text>
+      <text class="total-price">¥{{totalPriceText}}</text>
     </view>
     <view class="checkout-btn {{selectedCount === 0 ? 'disabled' : ''}}" bindtap="goCheckout">
       <text>结算({{selectedCount}})</text>
