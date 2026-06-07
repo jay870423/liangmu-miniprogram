@@ -313,11 +313,14 @@ Page({
             resolve()
           },
           fail: (err) => {
-            const msg = err.errMsg && err.errMsg.includes('cancel') ? '已取消支付' : '支付失败'
+            console.error('wx.requestPayment fail:', err)
+            const errMsg = err && err.errMsg ? err.errMsg : ''
+            const msg = errMsg.includes('cancel') ? '已取消支付' : (errMsg || '支付失败')
             reject(new Error(msg))
           },
         })
       } catch (err) {
+        console.error('requestPayment error:', err)
         reject(err)
       }
     })
