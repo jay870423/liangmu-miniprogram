@@ -21,8 +21,26 @@
       <view class="order-goods">
         <image class="goods-img" wx:for="{{item.items}}" wx:key="index" wx:for-item="g" src="{{g.product_image}}" mode="aspectFill" />
       </view>
+      <view class="fee-box">
+        <view class="fee-row">
+          <text>商品金额</text>
+          <text>¥{{item.total_amount_text}}</text>
+        </view>
+        <view class="fee-row">
+          <text>运费</text>
+          <text>¥{{item.freight_amount_text}}</text>
+        </view>
+        <view class="fee-row discount" wx:if="{{item.show_discount && item.coupon_amount_text !== '0.00'}}">
+          <text>优惠</text>
+          <text>-¥{{item.coupon_amount_text}}</text>
+        </view>
+        <view class="fee-row discount" wx:if="{{item.show_discount && item.points_amount_text !== '0.00'}}">
+          <text>积分抵扣</text>
+          <text>-¥{{item.points_amount_text}}</text>
+        </view>
+      </view>
       <view class="order-ft">
-        <text class="order-total">合计: ¥{{item.pay_amount || item.total_amount}}</text>
+        <text class="order-total">实付: ¥{{item.pay_amount_text}}</text>
         <view class="order-actions">
           <view class="action-btn secondary" wx:if="{{item.status === 'pending'}}" bindtap="cancelOrder" data-id="{{item.id}}">取消</view>
           <view class="action-btn primary" wx:if="{{item.status === 'pending'}}" bindtap="payOrder" data-id="{{item.id}}">去支付</view>
@@ -32,7 +50,7 @@
     </view>
 
     <view class="empty" wx:if="{{loaded && orders.length === 0}}">
-      <text>暂无相关订单</text>
+      <text class="empty-txt">暂无相关订单</text>
     </view>
     <view class="loading" wx:if="{{loading}}">加载中...</view>
     <view class="no-more" wx:if="{{loaded && orders.length > 0 && !hasMore}}">没有更多了</view>

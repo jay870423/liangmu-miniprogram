@@ -15,7 +15,10 @@
 .order-status.done { color: #999; }
 .order-goods { display: flex; gap: 12rpx; padding: 16rpx 24rpx; overflow-x: auto; }
 .goods-img { width: 120rpx; height: 120rpx; border-radius: 8rpx; flex-shrink: 0; }
-.order-ft { display: flex; justify-content: space-between; align-items: center; padding: 20rpx 24rpx; }
+.fee-box { padding: 4rpx 24rpx 12rpx; border-top: 1rpx solid #f7f7f7; }
+.fee-row { display: flex; justify-content: space-between; align-items: center; padding: 6rpx 0; font-size: 24rpx; color: #666; }
+.fee-row.discount { color: #d64b35; }
+.order-ft { display: flex; justify-content: space-between; align-items: center; padding: 18rpx 24rpx 22rpx; border-top: 1rpx solid #f5f5f5; }
 .order-total { font-size: 28rpx; font-weight: 700; color: #1a1a1a; }
 .order-actions { display: flex; gap: 12rpx; }
 .action-btn { padding: 12rpx 28rpx; border-radius: 32rpx; font-size: 24rpx; }

@@ -7,6 +7,11 @@ const {
   confirmReceive,
 } = require('../../utils/request')
 
+function money(value) {
+  const num = Number(value || 0)
+  return num.toFixed(2)
+}
+
 Page({
   data: {
     tabs: [
@@ -84,7 +89,7 @@ Page({
       }
       wx.removeStorageSync('checkoutItems')
       wx.hideLoading()
-      await this.requestPayment(orderRes.data.order_id)
+      await this.confirmAndPay(orderRes.data)
       this.setData({ currentTab: 'paid' })
       this.loadOrders(true)
     } catch (err) {
@@ -105,6 +110,12 @@ Page({
       if (res.code === 0) {
         const items = (res.data.items || []).map(order => ({
           ...order,
+          total_amount_text: money(order.total_amount),
+          freight_amount_text: money(order.freight_amount),
+          coupon_amount_text: money(order.coupon_amount),
+          points_amount_text: money(order.points_amount),
+          pay_amount_text: money(order.pay_amount || order.total_amount),
+          show_discount: Number(order.coupon_amount || 0) > 0 || Number(order.points_amount || 0) > 0,
           items: (order.items || []).map(normalizeProductImages),
         }))
         this.setData({
@@ -130,6 +141,31 @@ Page({
 
   loadMore() {
     if (this.data.hasMore) this.loadOrders()
+  },
+
+  confirmAndPay(order) {
+    const content = [
+      `商品金额：¥${money(order.total_amount)}`,
+      `运费：¥${money(order.freight_amount)}`,
+      Number(order.coupon_amount || 0) > 0 ? `优惠：-¥${money(order.coupon_amount)}` : '',
+      Number(order.points_amount || 0) > 0 ? `积分抵扣：-¥${money(order.points_amount)}` : '',
+      `实付金额：¥${money(order.pay_amount)}`,
+    ].filter(Boolean).join('\n')
+    return new Promise((resolve, reject) => {
+      wx.showModal({
+        title: '确认支付金额',
+        content,
+        confirmText: '去支付',
+        success: (res) => {
+          if (!res.confirm) {
+            reject(new Error('已取消支付'))
+            return
+          }
+          this.requestPayment(order.order_id).then(resolve).catch(reject)
+        },
+        fail: reject,
+      })
+    })
   },
 
   requestPayment(orderId) {
