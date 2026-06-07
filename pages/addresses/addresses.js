@@ -22,7 +22,17 @@ Page({
     items: [],
     loaded: false,
     showForm: false,
+    fromCheckout: false,
     form: { ...emptyForm },
+  },
+
+  onLoad(opt = {}) {
+    const fromCheckout = opt.from === 'checkout'
+    this.setData({
+      fromCheckout,
+      showForm: fromCheckout,
+      form: { ...emptyForm, is_default: fromCheckout },
+    })
   },
 
   onShow() {
@@ -52,6 +62,10 @@ Page({
   },
 
   closeForm() {
+    if (this.data.fromCheckout && this.data.items.length === 0) {
+      wx.navigateBack()
+      return
+    }
     this.setData({ showForm: false, form: { ...emptyForm } })
   },
 
@@ -72,12 +86,19 @@ Page({
       return
     }
     try {
+      let addressId = form.id
       if (form.id) {
         await updateAddress(form.id, form)
       } else {
-        await addAddress(form)
+        const res = await addAddress(form)
+        addressId = res.data && res.data.address_id
       }
+      if (addressId) wx.setStorageSync('lastSelectedAddressId', addressId)
       wx.showToast({ title: '已保存', icon: 'success' })
+      if (this.data.fromCheckout) {
+        setTimeout(() => wx.navigateBack(), 350)
+        return
+      }
       this.closeForm()
       this.loadData()
     } catch (e) {
@@ -88,6 +109,7 @@ Page({
   setDefault(e) {
     const id = e.currentTarget.dataset.id
     setDefaultAddress(id).then(() => {
+      wx.setStorageSync('lastSelectedAddressId', id)
       wx.showToast({ title: '设置成功', icon: 'success' })
       this.loadData()
     })

@@ -109,6 +109,7 @@ Page({
     const selectedItems = this.data.cartItems
       .filter(item => item.selected)
       .map(item => ({
+        cart_item_id: item.id,
         product_id: item.product_id,
         product_name: item.product_name,
         product_image: item.product_image,

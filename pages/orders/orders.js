@@ -7,6 +7,7 @@ const {
   payOrder,
   cancelOrder,
   confirmReceive,
+  removeCartItem,
 } = require('../../utils/request')
 
 function money(value) {
@@ -158,11 +159,14 @@ Page({
         ...item,
         full_address: buildFullAddress(item),
       }))
+      const lastSelectedId = wx.getStorageSync('lastSelectedAddressId')
       const currentId = this.data.selectedAddress && this.data.selectedAddress.id
-      const selected = addresses.find(item => item.id === currentId)
+      const selected = addresses.find(item => item.id === lastSelectedId)
+        || addresses.find(item => item.id === currentId)
         || addresses.find(item => item.is_default)
         || addresses[0]
         || null
+      if (lastSelectedId) wx.removeStorageSync('lastSelectedAddressId')
       this.setData({ addresses, selectedAddress: selected })
     } catch (e) {}
   },
@@ -187,7 +191,7 @@ Page({
   },
 
   goAddressManage() {
-    wx.navigateTo({ url: '/pages/addresses/addresses' })
+    wx.navigateTo({ url: '/pages/addresses/addresses?from=checkout' })
   },
 
   async submitOrderAndPay() {
@@ -216,6 +220,7 @@ Page({
       if (orderRes.code !== 0 || !orderRes.data.order_id) {
         throw new Error(orderRes.message || '创建订单失败')
       }
+      await this.removeOrderedCartItems(checkoutItems)
       wx.removeStorageSync('checkoutItems')
       wx.hideLoading()
       await this.requestPayment(orderRes.data.order_id)
@@ -226,6 +231,17 @@ Page({
       wx.showToast({ title: err.message || '支付失败', icon: 'none' })
     } finally {
       this.setData({ creating: false })
+    }
+  },
+
+  async removeOrderedCartItems(items = []) {
+    const cartItemIds = items
+      .map(item => item.cart_item_id)
+      .filter(Boolean)
+    for (const id of cartItemIds) {
+      try {
+        await removeCartItem(id)
+      } catch (e) {}
     }
   },
 
