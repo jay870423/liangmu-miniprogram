@@ -23,7 +23,7 @@ function getHeaders(needAuth) {
   const headers = { 'Content-Type': 'application/json' }
   if (needAuth) {
     const token = wx.getStorageSync('token')
-    if (token) headers['Authorization'] = `Bearer ${token}`
+    if (token) headers.Authorization = `Bearer ${token}`
   }
   return headers
 }
@@ -50,7 +50,7 @@ function request(url, method = 'GET', data = null, needAuth = false) {
       fail: (err) => {
         wx.showToast({ title: '网络异常', icon: 'none' })
         reject(err)
-      }
+      },
     })
   })
 }
@@ -87,6 +87,9 @@ const removeFavorite = (productId) => request(`/favorites/${productId}`, 'DELETE
 const getOrders = (status = '', page = 1) =>
   request(`/orders?status=${status}&page=${page}`, 'GET', null, true)
 const createOrder = (data) => request('/orders', 'POST', data, true)
+const payOrder = (id) => request(`/orders/${id}/pay`, 'POST', null, true)
+const cancelOrder = (id) => request(`/orders/${id}/cancel`, 'PUT', null, true)
+const confirmReceive = (id) => request(`/orders/${id}/receive`, 'POST', null, true)
 
 // 地址
 const getAddresses = () => request('/addresses', 'GET', null, true)
@@ -112,15 +115,40 @@ const getPointsHistory = (page = 1, pageSize = 20) =>
   request(`/points/log?page=${page}&page_size=${pageSize}`, 'GET', null, true)
 
 module.exports = {
-  normalizeAssetUrl, normalizeProductImages,
-  getHomeBanners, getHomeCategories, getHomeNew, getHomeRecommend,
-  getCategories, getCategoryProducts,
-  getProductDetail, searchProducts,
-  getCart, addCart, updateCartItem, removeCartItem,
-  getFavorites, addFavorite, removeFavorite,
-  getOrders, createOrder,
-  getAddresses, addAddress, updateAddress, deleteAddress, setDefaultAddress,
-  getAvailableCoupons, getMyCoupons, receiveCoupon,
-  wxLogin, bindUserPhone, getUserInfo, updateUserInfo,
-  getPoints, getPointsHistory,
+  normalizeAssetUrl,
+  normalizeProductImages,
+  getHomeBanners,
+  getHomeCategories,
+  getHomeNew,
+  getHomeRecommend,
+  getCategories,
+  getCategoryProducts,
+  getProductDetail,
+  searchProducts,
+  getCart,
+  addCart,
+  updateCartItem,
+  removeCartItem,
+  getFavorites,
+  addFavorite,
+  removeFavorite,
+  getOrders,
+  createOrder,
+  payOrder,
+  cancelOrder,
+  confirmReceive,
+  getAddresses,
+  addAddress,
+  updateAddress,
+  deleteAddress,
+  setDefaultAddress,
+  getAvailableCoupons,
+  getMyCoupons,
+  receiveCoupon,
+  wxLogin,
+  bindUserPhone,
+  getUserInfo,
+  updateUserInfo,
+  getPoints,
+  getPointsHistory,
 }

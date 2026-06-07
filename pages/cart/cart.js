@@ -95,6 +95,25 @@ Page({
 
   goCheckout() {
     if (this.data.selectedCount === 0) return
+    if (!wx.getStorageSync('token')) {
+      wx.showModal({
+        title: '请先登录',
+        content: '登录后才能结算购物车商品',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) wx.switchTab({ url: '/pages/my/my' })
+        },
+      })
+      return
+    }
+    const selectedItems = this.data.cartItems
+      .filter(item => item.selected)
+      .map(item => ({
+        product_id: item.product_id,
+        quantity: item.quantity,
+        sku_spec: item.sku_spec || {},
+      }))
+    wx.setStorageSync('checkoutItems', selectedItems)
     wx.navigateTo({ url: '/pages/orders/orders?type=create' })
   },
 })

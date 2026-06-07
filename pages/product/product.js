@@ -68,7 +68,19 @@ Page({
   },
 
   onBuyNow() {
-    const { product } = this.data
-    wx.navigateTo({ url: `/pages/orders/orders?type=create&product_id=${product.id}` })
+    const { product, selectedSpecIndex } = this.data
+    if (!wx.getStorageSync('token')) {
+      wx.showModal({
+        title: '请先登录',
+        content: '登录后才能立即购买',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) wx.switchTab({ url: '/pages/my/my' })
+        },
+      })
+      return
+    }
+    const skuSpec = encodeURIComponent(JSON.stringify({ spec_index: selectedSpecIndex }))
+    wx.navigateTo({ url: `/pages/orders/orders?type=create&product_id=${product.id}&quantity=1&sku_spec=${skuSpec}` })
   },
 })
