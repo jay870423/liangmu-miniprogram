@@ -53,28 +53,29 @@
   padding: 24rpx 28rpx 6rpx;
 }
 .section-title { font-size: 30rpx; font-weight: 800; color: #1c241b; }
-.section-link { font-size: 24rpx; color: #7b8b78; }
-.order-tabs { display: flex; padding: 18rpx 10rpx 24rpx; }
+.section-link { font-size: 24rpx; color: #6f856c; }
+.order-tabs { display: flex; padding: 18rpx 12rpx 26rpx; }
 .tab-item {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10rpx;
+  gap: 12rpx;
   position: relative;
 }
 .tab-icon-wrap {
   position: relative;
-  width: 68rpx;
-  height: 68rpx;
-  border-radius: 24rpx;
-  background: #f1f6ef;
+  width: 76rpx;
+  height: 76rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(180deg, #f4f9f2 0%, #eaf3e6 100%);
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: inset 0 0 0 1rpx rgba(45, 90, 39, 0.04);
 }
-.tab-icon { font-size: 30rpx; color: #2d5a27; font-weight: 800; }
-.tab-name { font-size: 22rpx; color: #536250; }
+.tab-icon { width: 42rpx; height: 42rpx; display: block; }
+.tab-name { font-size: 23rpx; color: #4f604b; font-weight: 500; }
 .tab-badge {
   position: absolute;
   top: -8rpx;
@@ -88,31 +89,32 @@
   text-align: center;
 }
 
-.menu-section { padding: 4rpx 0; }
+.menu-section { padding: 8rpx 0; }
 .menu-item {
   display: flex;
   align-items: center;
-  min-height: 104rpx;
-  padding: 10rpx 28rpx;
+  min-height: 112rpx;
+  padding: 12rpx 28rpx;
   border-bottom: 1rpx solid #f0f3ef;
 }
 .menu-item:active { background: #f8faf7; }
 .menu-item:last-child { border-bottom: 0; }
 .menu-icon-wrap {
-  width: 64rpx;
-  height: 64rpx;
-  border-radius: 22rpx;
-  background: #f1f6ef;
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 26rpx;
+  background: linear-gradient(180deg, #f5faf3 0%, #eaf3e7 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 20rpx;
+  box-shadow: inset 0 0 0 1rpx rgba(45, 90, 39, 0.04);
 }
-.menu-icon { font-size: 28rpx; color: #2d5a27; font-weight: 800; }
+.menu-icon { width: 38rpx; height: 38rpx; display: block; }
 .menu-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6rpx; }
 .menu-label { font-size: 28rpx; color: #1f2a1e; font-weight: 650; }
 .menu-desc { font-size: 22rpx; color: #9aa399; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.menu-arrow { font-size: 42rpx; color: #c4c9c1; padding-left: 16rpx; line-height: 1; }
+.menu-arrow { width: 28rpx; height: 28rpx; margin-left: 16rpx; opacity: 0.45; }
 
 .logout-btn {
   margin: 28rpx 24rpx 0;
