@@ -103,6 +103,7 @@ Page({
           product_name: product.name,
           product_image: product.main_image || product.image || (product.images || [])[0] || '',
           price: product.price,
+          shipping_fee: product.shipping_fee,
           quantity,
           subtotal: money(Number(product.price || 0) * quantity),
           sku_spec: opt.sku_spec ? JSON.parse(decodeURIComponent(opt.sku_spec)) : {},
@@ -127,7 +128,7 @@ Page({
     const list = []
     for (const item of items) {
       let next = { ...item }
-      if (!next.product_name || !next.product_image || !next.price) {
+      if (!next.product_name || !next.product_image || !next.price || next.shipping_fee === undefined) {
         const detailRes = await getProductDetail(next.product_id)
         if (detailRes.code === 0) {
           const product = normalizeProductImages(detailRes.data)
@@ -136,15 +137,19 @@ Page({
             product_name: next.product_name || product.name,
             product_image: next.product_image || product.main_image || product.image || (product.images || [])[0] || '',
             price: next.price || product.price,
+            shipping_fee: next.shipping_fee || product.shipping_fee,
           }
         }
       }
       const quantity = Number(next.quantity || 1)
       const price = Number(next.price || 0)
+      const shippingFee = Number(next.shipping_fee || 0)
       list.push({
         ...normalizeProductImages(next),
         quantity,
         price_text: money(price),
+        shipping_fee: money(shippingFee),
+        shipping_fee_text: money(shippingFee),
         subtotal_text: money(next.subtotal || price * quantity),
       })
     }
@@ -173,7 +178,7 @@ Page({
 
   calcCheckoutSummary(items = this.data.checkoutItems) {
     const total = items.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 1), 0)
-    const freight = total >= 500 ? 0 : 10
+    const freight = items.reduce((sum, item) => sum + Number(item.shipping_fee || 0), 0)
     const pay = total + freight
     this.setData({
       checkoutSummary: {

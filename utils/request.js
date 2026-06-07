@@ -32,6 +32,10 @@ function normalizeProductImages(item = {}) {
   if (next.subtotal !== undefined) {
     next.subtotal_text = formatMoney(next.subtotal)
   }
+  if (next.shipping_fee !== undefined) {
+    next.shipping_fee_value = Number(next.shipping_fee || 0)
+    next.shipping_fee_text = formatMoney(next.shipping_fee)
+  }
   return next
 }
 

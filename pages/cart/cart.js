@@ -115,6 +115,7 @@ Page({
         product_name: item.product_name,
         product_image: item.product_image,
         price: item.price,
+        shipping_fee: item.shipping_fee,
         quantity: item.quantity,
         subtotal: item.subtotal || (Number(item.price || 0) * Number(item.quantity || 1)).toFixed(2),
         sku_spec: item.sku_spec || {},
