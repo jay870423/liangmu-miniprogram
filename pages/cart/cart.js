@@ -110,7 +110,11 @@ Page({
       .filter(item => item.selected)
       .map(item => ({
         product_id: item.product_id,
+        product_name: item.product_name,
+        product_image: item.product_image,
+        price: item.price,
         quantity: item.quantity,
+        subtotal: item.subtotal || (Number(item.price || 0) * Number(item.quantity || 1)).toFixed(2),
         sku_spec: item.sku_spec || {},
       }))
     wx.setStorageSync('checkoutItems', selectedItems)

@@ -1,58 +1,125 @@
 <view class="page">
-  <view class="status-tabs">
-    <view
-      class="tab {{currentTab === item.value ? 'active' : ''}}"
-      wx:for="{{tabs}}"
-      wx:key="value"
-      bindtap="switchTab"
-      data-value="{{item.value}}"
-    >
-      {{item.label}}
-      <view class="tab-dot" wx:if="{{item.value === currentTab}}"></view>
+  <view wx:if="{{checkoutMode}}" class="checkout-page">
+    <view class="checkout-section">
+      <view class="section-title">收货地址</view>
+      <view class="address-card selected" wx:if="{{selectedAddress}}">
+        <view class="address-top">
+          <text class="receiver">{{selectedAddress.receiver_name}}</text>
+          <text class="phone">{{selectedAddress.phone}}</text>
+          <text class="default-tag" wx:if="{{selectedAddress.is_default}}">默认</text>
+        </view>
+        <view class="address-detail">{{selectedAddress.full_address}}</view>
+      </view>
+      <view class="empty-address" wx:else bindtap="goAddressManage">请先添加收货地址</view>
+      <view class="address-list" wx:if="{{addresses.length > 1}}">
+        <view
+          class="address-option {{selectedAddress && selectedAddress.id === item.id ? 'active' : ''}}"
+          wx:for="{{addresses}}"
+          wx:key="id"
+          bindtap="chooseAddress"
+          data-id="{{item.id}}"
+        >
+          <text>{{item.receiver_name}}</text>
+          <text>{{item.full_address}}</text>
+        </view>
+      </view>
+      <view class="manage-link" bindtap="goAddressManage">{{selectedAddress ? '管理收货地址' : '新增收货地址'}}</view>
+    </view>
+
+    <view class="checkout-section">
+      <view class="section-title">商品信息</view>
+      <view class="checkout-good" wx:for="{{checkoutItems}}" wx:key="product_id">
+        <image class="checkout-img" src="{{item.product_image}}" mode="aspectFill" />
+        <view class="checkout-good-main">
+          <view class="checkout-good-name">{{item.product_name}}</view>
+          <view class="checkout-good-meta">单价 ¥{{item.price_text}} × {{item.quantity}}</view>
+        </view>
+        <view class="checkout-subtotal">¥{{item.subtotal_text}}</view>
+      </view>
+    </view>
+
+    <view class="checkout-section">
+      <view class="fee-row">
+        <text>商品金额</text>
+        <text>¥{{checkoutSummary.total_amount}}</text>
+      </view>
+      <view class="fee-row">
+        <text>运费</text>
+        <text>¥{{checkoutSummary.freight_amount}}</text>
+      </view>
+      <view class="pay-row">
+        <text>实付金额</text>
+        <text>¥{{checkoutSummary.pay_amount}}</text>
+      </view>
+    </view>
+
+    <view class="checkout-bottom">
+      <view class="bottom-total">
+        <text>实付</text>
+        <text>¥{{checkoutSummary.pay_amount}}</text>
+      </view>
+      <view class="submit-btn {{!selectedAddress || creating ? 'disabled' : ''}}" bindtap="submitOrderAndPay">
+        {{creating ? '提交中...' : '提交订单并支付'}}
+      </view>
     </view>
   </view>
 
-  <scroll-view class="order-list" scroll-y bindscrolltolower="loadMore">
-    <view class="order-card" wx:for="{{orders}}" wx:key="id">
-      <view class="order-hd">
-        <text class="order-no">订单号 {{item.order_no}}</text>
-        <text class="order-status {{statusClass[item.status]}}">{{statusText[item.status] || item.status}}</text>
-      </view>
-      <view class="order-goods">
-        <image class="goods-img" wx:for="{{item.items}}" wx:key="index" wx:for-item="g" src="{{g.product_image}}" mode="aspectFill" />
-      </view>
-      <view class="fee-box">
-        <view class="fee-row">
-          <text>商品金额</text>
-          <text>¥{{item.total_amount_text}}</text>
-        </view>
-        <view class="fee-row">
-          <text>运费</text>
-          <text>¥{{item.freight_amount_text}}</text>
-        </view>
-        <view class="fee-row discount" wx:if="{{item.show_discount && item.coupon_amount_text !== '0.00'}}">
-          <text>优惠</text>
-          <text>-¥{{item.coupon_amount_text}}</text>
-        </view>
-        <view class="fee-row discount" wx:if="{{item.show_discount && item.points_amount_text !== '0.00'}}">
-          <text>积分抵扣</text>
-          <text>-¥{{item.points_amount_text}}</text>
-        </view>
-      </view>
-      <view class="order-ft">
-        <text class="order-total">实付: ¥{{item.pay_amount_text}}</text>
-        <view class="order-actions">
-          <view class="action-btn secondary" wx:if="{{item.status === 'pending'}}" bindtap="cancelOrder" data-id="{{item.id}}">取消</view>
-          <view class="action-btn primary" wx:if="{{item.status === 'pending'}}" bindtap="payOrder" data-id="{{item.id}}">去支付</view>
-          <view class="action-btn secondary" wx:if="{{item.status === 'shipped' || item.status === 'delivered'}}" bindtap="confirmReceive" data-id="{{item.id}}">确认收货</view>
-        </view>
+  <view wx:else>
+    <view class="status-tabs">
+      <view
+        class="tab {{currentTab === item.value ? 'active' : ''}}"
+        wx:for="{{tabs}}"
+        wx:key="value"
+        bindtap="switchTab"
+        data-value="{{item.value}}"
+      >
+        {{item.label}}
+        <view class="tab-dot" wx:if="{{item.value === currentTab}}"></view>
       </view>
     </view>
 
-    <view class="empty" wx:if="{{loaded && orders.length === 0}}">
-      <text class="empty-txt">暂无相关订单</text>
-    </view>
-    <view class="loading" wx:if="{{loading}}">加载中...</view>
-    <view class="no-more" wx:if="{{loaded && orders.length > 0 && !hasMore}}">没有更多了</view>
-  </scroll-view>
+    <scroll-view class="order-list" scroll-y bindscrolltolower="loadMore">
+      <view class="order-card" wx:for="{{orders}}" wx:key="id">
+        <view class="order-hd">
+          <text class="order-no">订单号 {{item.order_no}}</text>
+          <text class="order-status {{statusClass[item.status]}}">{{statusText[item.status] || item.status}}</text>
+        </view>
+        <view class="order-goods">
+          <image class="goods-img" wx:for="{{item.items}}" wx:key="index" wx:for-item="g" src="{{g.product_image}}" mode="aspectFill" />
+        </view>
+        <view class="fee-box">
+          <view class="fee-row">
+            <text>商品金额</text>
+            <text>¥{{item.total_amount_text}}</text>
+          </view>
+          <view class="fee-row">
+            <text>运费</text>
+            <text>¥{{item.freight_amount_text}}</text>
+          </view>
+          <view class="fee-row discount" wx:if="{{item.show_discount && item.coupon_amount_text !== '0.00'}}">
+            <text>优惠</text>
+            <text>-¥{{item.coupon_amount_text}}</text>
+          </view>
+          <view class="fee-row discount" wx:if="{{item.show_discount && item.points_amount_text !== '0.00'}}">
+            <text>积分抵扣</text>
+            <text>-¥{{item.points_amount_text}}</text>
+          </view>
+        </view>
+        <view class="order-ft">
+          <text class="order-total">实付: ¥{{item.pay_amount_text}}</text>
+          <view class="order-actions">
+            <view class="action-btn secondary" wx:if="{{item.status === 'pending'}}" bindtap="cancelOrder" data-id="{{item.id}}">取消</view>
+            <view class="action-btn primary" wx:if="{{item.status === 'pending'}}" bindtap="payOrder" data-id="{{item.id}}">去支付</view>
+            <view class="action-btn secondary" wx:if="{{item.status === 'shipped' || item.status === 'delivered'}}" bindtap="confirmReceive" data-id="{{item.id}}">确认收货</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="empty" wx:if="{{loaded && orders.length === 0}}">
+        <text class="empty-txt">暂无相关订单</text>
+      </view>
+      <view class="loading" wx:if="{{loading}}">加载中...</view>
+      <view class="no-more" wx:if="{{loaded && orders.length > 0 && !hasMore}}">没有更多了</view>
+    </scroll-view>
+  </view>
 </view>
