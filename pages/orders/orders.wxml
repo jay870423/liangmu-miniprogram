@@ -78,7 +78,14 @@
       </view>
     </view>
 
-    <scroll-view class="order-list" scroll-y bindscrolltolower="loadMore">
+    <view class="login-empty" wx:if="{{needLogin}}">
+      <view class="login-icon">🔐</view>
+      <view class="login-title">请先登录</view>
+      <view class="login-desc">登录后可以查看订单、继续支付和确认收货</view>
+      <view class="login-btn" bindtap="goLogin">去登录</view>
+    </view>
+
+    <scroll-view wx:else class="order-list" scroll-y bindscrolltolower="loadMore">
       <view class="order-card" wx:for="{{orders}}" wx:key="id">
         <view class="order-hd">
           <text class="order-no">订单号 {{item.order_no}}</text>

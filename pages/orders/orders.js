@@ -1,5 +1,6 @@
 const {
   normalizeProductImages,
+  formatError,
   getOrders,
   getAddresses,
   getProductDetail,
@@ -34,6 +35,7 @@ Page({
     hasMore: false,
     loading: false,
     loaded: false,
+    needLogin: false,
     creating: false,
     checkoutMode: false,
     checkoutItems: [],
@@ -75,6 +77,7 @@ Page({
       this.initCheckout(opt)
       return
     }
+    if (!this.ensureLogin(false)) return
     this.loadOrders(true)
   },
 
@@ -85,11 +88,7 @@ Page({
   },
 
   async initCheckout(opt = {}) {
-    if (!wx.getStorageSync('token')) {
-      wx.showToast({ title: '请先登录', icon: 'none' })
-      wx.switchTab({ url: '/pages/my/my' })
-      return
-    }
+    if (!this.ensureLogin(true)) return
     wx.showLoading({ title: '加载中...', mask: true })
     try {
       let items = []
@@ -252,6 +251,7 @@ Page({
 
   async loadOrders(reset = false) {
     if (this.data.loading) return
+    if (!this.ensureLogin(false)) return
     const page = reset ? 1 : this.data.page
     this.setData({ loading: true })
     try {
@@ -275,6 +275,7 @@ Page({
         })
       }
     } catch (e) {
+      console.error('load orders error:', formatError(e), e)
       this.setData({ loaded: true })
     } finally {
       this.setData({ loading: false })
@@ -285,11 +286,36 @@ Page({
     const val = e.currentTarget.dataset.value
     if (val === this.data.currentTab) return
     this.setData({ currentTab: val, orders: [], page: 1, loaded: false })
+    if (!this.ensureLogin(false)) return
     this.loadOrders(true)
   },
 
   loadMore() {
     if (this.data.hasMore) this.loadOrders()
+  },
+
+  ensureLogin(redirect = false) {
+    const hasToken = !!wx.getStorageSync('token')
+    if (hasToken) {
+      if (this.data.needLogin) this.setData({ needLogin: false })
+      return true
+    }
+    this.setData({
+      needLogin: true,
+      loaded: true,
+      loading: false,
+      orders: [],
+      hasMore: false,
+    })
+    if (redirect) {
+      wx.showToast({ title: '请先登录', icon: 'none' })
+      setTimeout(() => wx.switchTab({ url: '/pages/my/my' }), 350)
+    }
+    return false
+  },
+
+  goLogin() {
+    wx.switchTab({ url: '/pages/my/my' })
   },
 
   requestPayment(orderId) {
