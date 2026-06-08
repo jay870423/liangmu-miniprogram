@@ -34,10 +34,12 @@
                 <text class="item-price">¥{{item.price_text}}</text>
                 <text class="item-ori" wx:if="{{item.original_price_value > item.price_value}}">¥{{item.original_price_text}}</text>
               </view>
-              <text class="item-sales">已售{{item.sales || 0}}</text>
+              <view class="item-side">
+                <text class="item-sales">已售{{item.sales || 0}}</text>
+                <view class="item-add-btn" catchtap="onAddCart" data-id="{{item.id}}">+</view>
+              </view>
             </view>
           </view>
-          <view class="item-add-btn" catchtap="onAddCart" data-id="{{item.id}}">+</view>
         </view>
       </view>
       <view class="empty" wx:if="{{loaded && products.length === 0}}">
