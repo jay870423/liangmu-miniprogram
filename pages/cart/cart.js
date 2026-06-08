@@ -50,6 +50,7 @@ Page({
     const id = e.currentTarget.dataset.id
     const item = this.data.cartItems.find(i => i.id === id)
     if (item && item.quantity > 1) {
+      this.updateLocalQty(id, item.quantity - 1)
       await updateCartItem(id, { quantity: item.quantity - 1 })
       this.loadCart()
     }
@@ -59,9 +60,18 @@ Page({
     const id = e.currentTarget.dataset.id
     const item = this.data.cartItems.find(i => i.id === id)
     if (item) {
+      this.updateLocalQty(id, item.quantity + 1)
       await updateCartItem(id, { quantity: item.quantity + 1 })
       this.loadCart()
     }
+  },
+
+  updateLocalQty(id, quantity) {
+    const items = this.data.cartItems.map(item =>
+      item.id === id ? { ...item, quantity } : item
+    )
+    this.setData({ cartItems: items })
+    this.calcTotal()
   },
 
   async removeItem(e) {

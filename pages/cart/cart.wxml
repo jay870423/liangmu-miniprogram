@@ -2,24 +2,35 @@
   <!-- 购物车列表 -->
   <view class="cart-list" wx:if="{{cartItems.length > 0}}">
     <view class="cart-item" wx:for="{{cartItems}}" wx:key="id">
-      <view class="item-check" bindtap="toggleSelect" data-id="{{item.id}}">
-        <text class="check-icon {{item.selected ? 'checked' : ''}}">{{item.selected ? '✅' : '⚪'}}</text>
-      </view>
-      <image class="item-img" src="{{item.product_image}}" mode="aspectFill" bindtap="goProduct" data-id="{{item.product_id}}" />
-      <view class="item-detail">
-        <text class="item-name" bindtap="goProduct" data-id="{{item.product_id}}">{{item.product_name}}</text>
-        <text class="item-spec" wx:if="{{item.spec_name}}">{{item.spec_name}}</text>
-        <view class="item-bottom">
-          <text class="item-price">¥{{item.price_text}}</text>
-          <view class="qty-ctrl">
-            <view class="qty-btn" bindtap="decreaseQty" data-id="{{item.id}}">−</view>
-            <text class="qty-num">{{item.quantity}}</text>
-            <view class="qty-btn" bindtap="increaseQty" data-id="{{item.id}}">+</view>
-          </view>
+      <view class="item-head">
+        <view class="item-check" bindtap="toggleSelect" data-id="{{item.id}}">
+          <text class="check-icon {{item.selected ? 'checked' : ''}}">{{item.selected ? '✓' : ''}}</text>
+          <text class="check-label">选择</text>
+        </view>
+        <view class="item-del" bindtap="removeItem" data-id="{{item.id}}">
+          <text>删除</text>
         </view>
       </view>
-      <view class="item-del" bindtap="removeItem" data-id="{{item.id}}">
-        <text>🗑️</text>
+
+      <view class="item-main">
+        <image class="item-img" src="{{item.product_image}}" mode="aspectFill" bindtap="goProduct" data-id="{{item.product_id}}" />
+        <view class="item-detail">
+          <view class="item-name" bindtap="goProduct" data-id="{{item.product_id}}">{{item.product_name}}</view>
+          <view class="item-spec" wx:if="{{item.spec_name}}">{{item.spec_name}}</view>
+          <view class="item-meta" wx:if="{{item.shipping_fee_text}}">运费 ¥{{item.shipping_fee_text}}</view>
+        </view>
+      </view>
+
+      <view class="item-bottom">
+        <view class="price-wrap">
+          <text class="price-label">单价</text>
+          <text class="item-price">¥{{item.price_text}}</text>
+        </view>
+        <view class="qty-ctrl">
+          <view class="qty-btn" bindtap="decreaseQty" data-id="{{item.id}}">−</view>
+          <text class="qty-num">{{item.quantity}}</text>
+          <view class="qty-btn" bindtap="increaseQty" data-id="{{item.id}}">+</view>
+        </view>
       </view>
     </view>
   </view>
@@ -34,15 +45,18 @@
   <!-- 底部结算栏 -->
   <view class="bottom-bar" wx:if="{{cartItems.length > 0}}">
     <view class="all-check" bindtap="toggleSelectAll">
-      <text class="check-icon {{selectAll ? 'checked' : ''}}">{{selectAll ? '✅' : '⚪'}}</text>
+      <text class="check-icon {{selectAll ? 'checked' : ''}}">{{selectAll ? '✓' : ''}}</text>
       <text>全选</text>
     </view>
     <view class="total-wrap">
-      <text class="total-label">合计：</text>
-      <text class="total-price">¥{{totalPriceText}}</text>
+      <view class="total-line">
+        <text class="total-label">合计</text>
+        <text class="total-price">¥{{totalPriceText}}</text>
+      </view>
+      <text class="selected-tip">已选 {{selectedCount}} 件</text>
     </view>
     <view class="checkout-btn {{selectedCount === 0 ? 'disabled' : ''}}" bindtap="goCheckout">
-      <text>结算({{selectedCount}})</text>
+      <text>结算</text>
     </view>
   </view>
 </view>
