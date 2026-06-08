@@ -14,6 +14,18 @@ function formatMoney(value) {
   return Number.isFinite(num) ? num.toFixed(2) : '0.00'
 }
 
+function formatError(err) {
+  if (!err) return '未知错误'
+  if (typeof err === 'string') return err
+  if (err.message) return err.message
+  if (err.errMsg) return err.errMsg
+  try {
+    return JSON.stringify(err)
+  } catch (e) {
+    return String(err)
+  }
+}
+
 function normalizeProductImages(item = {}) {
   const next = { ...item }
   if (next.main_image) next.main_image = normalizeAssetUrl(next.main_image)
@@ -68,6 +80,7 @@ function request(url, method = 'GET', data = null, needAuth = false) {
         }
       },
       fail: (err) => {
+        console.error('request fail:', formatError(err), err)
         wx.showToast({ title: '网络异常', icon: 'none' })
         reject(err)
       },
@@ -137,6 +150,7 @@ const getPointsHistory = (page = 1, pageSize = 20) =>
 module.exports = {
   normalizeAssetUrl,
   formatMoney,
+  formatError,
   normalizeProductImages,
   getHomeBanners,
   getHomeCategories,

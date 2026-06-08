@@ -3,7 +3,7 @@ App({
     userInfo: null,
     token: null,
     openid: null,
-    baseUrl: 'http://81.70.144.73:5176/api/v1'
+    baseUrl: 'https://api.zhouyuaninfo.com.cn/api/v1'
   },
 
   onLaunch() {

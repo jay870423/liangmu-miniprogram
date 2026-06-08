@@ -1,6 +1,7 @@
 const {
   normalizeAssetUrl,
   normalizeProductImages,
+  formatError,
   getHomeBanners,
   getHomeCategories,
   getHomeNew,
@@ -52,7 +53,8 @@ Page({
         this.setData({ recommendProducts: (recommendRes.data.items || []).map(normalizeProductImages) })
       }
     } catch (e) {
-      console.error('load data error:', e)
+      console.error('load data error:', formatError(e), e)
+      wx.showToast({ title: formatError(e), icon: 'none' })
     }
   },
 

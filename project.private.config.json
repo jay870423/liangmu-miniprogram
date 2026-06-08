@@ -1,5 +1,5 @@
 {
-  "libVersion": "3.13.0",
+  "libVersion": "2.25.0",
   "projectname": "liangmu-miniprogram",
   "condition": {},
   "setting": {
@@ -9,7 +9,7 @@
     "skylineRenderEnable": false,
     "preloadBackgroundData": false,
     "autoAudits": false,
-    "useApiHook": true,
+    "useApiHook": false,
     "showShadowRootInWxmlPanel": true,
     "useStaticServer": false,
     "useLanDebug": false,
