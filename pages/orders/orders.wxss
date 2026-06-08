@@ -1,27 +1,33 @@
 /* 订单页 */
-.page { background: #f5f5f5; min-height: 100vh; }
-.status-tabs { display: flex; background: #fff; padding: 0 16rpx; border-bottom: 1rpx solid #f0f0f0; position: sticky; top: 0; z-index: 10; }
-.tab { flex: 1; text-align: center; padding: 24rpx 0; font-size: 28rpx; color: #666; position: relative; }
+.page { background: #f5f5f5; min-height: 100vh; width: 100%; overflow-x: hidden; box-sizing: border-box; }
+.status-tabs { display: flex; width: 100%; box-sizing: border-box; background: #fff; padding: 0 12rpx; border-bottom: 1rpx solid #f0f0f0; position: sticky; top: 0; z-index: 10; }
+.tab { flex: 1; min-width: 0; text-align: center; padding: 22rpx 0; font-size: 26rpx; color: #666; position: relative; white-space: nowrap; }
 .tab.active { color: #2d5a27; font-weight: 600; }
 .tab-dot { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 48rpx; height: 4rpx; background: #2d5a27; border-radius: 4rpx; }
-.order-list { padding: 20rpx 24rpx; display: flex; flex-direction: column; gap: 20rpx; }
-.order-card { background: #fff; border-radius: 16rpx; overflow: hidden; }
-.order-hd { display: flex; justify-content: space-between; align-items: center; padding: 20rpx 24rpx; border-bottom: 1rpx solid #f5f5f5; }
-.order-no { font-size: 22rpx; color: #888; }
-.order-status { font-size: 24rpx; font-weight: 600; }
+.order-list { width: 100%; box-sizing: border-box; padding: 18rpx 18rpx 28rpx; }
+.order-card { width: 100%; box-sizing: border-box; background: #fff; border-radius: 16rpx; overflow: hidden; margin-bottom: 18rpx; box-shadow: 0 4rpx 18rpx rgba(0,0,0,0.035); }
+.order-hd { display: flex; justify-content: space-between; align-items: flex-start; gap: 16rpx; padding: 20rpx 22rpx; border-bottom: 1rpx solid #f5f5f5; }
+.order-no { flex: 1; min-width: 0; font-size: 22rpx; color: #888; line-height: 1.45; word-break: break-all; }
+.order-status { flex-shrink: 0; max-width: 130rpx; text-align: right; font-size: 24rpx; font-weight: 600; line-height: 1.45; }
 .order-status.pending { color: #ff6b00; }
 .order-status.paid { color: #2d5a27; }
 .order-status.shipped { color: #007aff; }
 .order-status.done { color: #999; }
-.order-goods { display: flex; gap: 12rpx; padding: 16rpx 24rpx; overflow-x: auto; }
-.goods-img { width: 120rpx; height: 120rpx; border-radius: 8rpx; flex-shrink: 0; }
-.fee-box { padding: 4rpx 24rpx 12rpx; border-top: 1rpx solid #f7f7f7; }
-.fee-row { display: flex; justify-content: space-between; align-items: center; padding: 6rpx 0; font-size: 24rpx; color: #666; }
+.order-goods { display: flex; align-items: center; gap: 16rpx; padding: 18rpx 22rpx; border-bottom: 1rpx solid #f7f7f7; box-sizing: border-box; }
+.goods-img { width: 112rpx; height: 112rpx; border-radius: 10rpx; flex-shrink: 0; background: #f4f4f4; }
+.goods-main { flex: 1; min-width: 0; }
+.goods-name { font-size: 26rpx; color: #333; line-height: 1.35; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.goods-meta { margin-top: 12rpx; font-size: 22rpx; color: #999; }
+.goods-subtotal { flex-shrink: 0; max-width: 150rpx; font-size: 24rpx; font-weight: 700; color: #333; text-align: right; word-break: break-all; }
+.fee-box { padding: 10rpx 22rpx 12rpx; border-top: 1rpx solid #fafafa; box-sizing: border-box; }
+.fee-row { display: flex; justify-content: space-between; align-items: center; gap: 20rpx; padding: 7rpx 0; font-size: 24rpx; color: #666; }
+.fee-row text:first-child { flex-shrink: 0; }
+.fee-row text:last-child { min-width: 0; text-align: right; word-break: break-all; }
 .fee-row.discount { color: #d64b35; }
-.order-ft { display: flex; justify-content: space-between; align-items: center; padding: 18rpx 24rpx 22rpx; border-top: 1rpx solid #f5f5f5; }
-.order-total { font-size: 28rpx; font-weight: 700; color: #1a1a1a; }
-.order-actions { display: flex; gap: 12rpx; }
-.action-btn { padding: 12rpx 28rpx; border-radius: 32rpx; font-size: 24rpx; }
+.order-ft { display: flex; flex-direction: column; align-items: stretch; gap: 16rpx; padding: 16rpx 22rpx 22rpx; border-top: 1rpx solid #f5f5f5; box-sizing: border-box; }
+.order-total { font-size: 28rpx; font-weight: 800; color: #1a1a1a; line-height: 1.4; }
+.order-actions { display: flex; justify-content: flex-end; gap: 12rpx; flex-wrap: wrap; }
+.action-btn { min-width: 132rpx; box-sizing: border-box; padding: 12rpx 24rpx; border-radius: 32rpx; font-size: 24rpx; text-align: center; }
 .action-btn.primary { background: #2d5a27; color: #fff; }
 .action-btn.secondary { background: #f5f5f5; color: #666; }
 .empty { display: flex; flex-direction: column; align-items: center; padding: 120rpx 0; gap: 16rpx; font-size: 80rpx; }
