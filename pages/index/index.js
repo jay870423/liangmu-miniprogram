@@ -23,38 +23,63 @@ Page({
   onShow() {},
 
   async loadData() {
+    this.loadBanners()
+    this.loadCategories()
+    this.loadNewProducts()
+    this.loadRecommendProducts()
+  },
+
+  async loadBanners() {
     try {
-      const [bannersRes, categoriesRes, newRes, recommendRes] = await Promise.all([
-        getHomeBanners(),
-        getHomeCategories(),
-        getHomeNew(),
-        getHomeRecommend(),
-      ])
-      if (bannersRes.code === 0) {
+      const res = await getHomeBanners()
+      if (res.code === 0) {
         this.setData({
-          banners: (bannersRes.data.items || []).map(item => ({
+          banners: (res.data.items || []).map(item => ({
             ...item,
             image: normalizeAssetUrl(item.image),
           })),
         })
       }
-      if (categoriesRes.code === 0) {
+    } catch (e) {
+      console.error('load banners error:', formatError(e), e)
+    }
+  },
+
+  async loadCategories() {
+    try {
+      const res = await getHomeCategories()
+      if (res.code === 0) {
         this.setData({
-          categories: (categoriesRes.data.items || []).map(item => ({
+          categories: (res.data.items || []).map(item => ({
             ...item,
             iconUrl: normalizeAssetUrl(item.icon_url || item.icon),
           })),
         })
       }
-      if (newRes.code === 0) {
-        this.setData({ newProducts: (newRes.data.items || []).map(normalizeProductImages) })
-      }
-      if (recommendRes.code === 0) {
-        this.setData({ recommendProducts: (recommendRes.data.items || []).map(normalizeProductImages) })
+    } catch (e) {
+      console.error('load home categories error:', formatError(e), e)
+    }
+  },
+
+  async loadNewProducts() {
+    try {
+      const res = await getHomeNew()
+      if (res.code === 0) {
+        this.setData({ newProducts: (res.data.items || []).map(normalizeProductImages) })
       }
     } catch (e) {
-      console.error('load data error:', formatError(e), e)
-      wx.showToast({ title: formatError(e), icon: 'none' })
+      console.error('load new products error:', formatError(e), e)
+    }
+  },
+
+  async loadRecommendProducts() {
+    try {
+      const res = await getHomeRecommend()
+      if (res.code === 0) {
+        this.setData({ recommendProducts: (res.data.items || []).map(normalizeProductImages) })
+      }
+    } catch (e) {
+      console.error('load recommend products error:', formatError(e), e)
     }
   },
 

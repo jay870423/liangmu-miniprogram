@@ -1,5 +1,6 @@
 const API_ORIGIN = 'https://api.zhouyuaninfo.com.cn'
 const BASE_URL = `${API_ORIGIN}/api/v1`
+const REQUEST_TIMEOUT = 10000
 
 function normalizeAssetUrl(url) {
   if (!url) return ''
@@ -18,6 +19,7 @@ function formatError(err) {
   if (!err) return '未知错误'
   if (typeof err === 'string') return err
   if (err.message) return err.message
+  if (err.errMsg && /timeout/i.test(err.errMsg)) return '接口响应超时，请稍后重试'
   if (err.errMsg) return err.errMsg
   try {
     return JSON.stringify(err)
@@ -62,11 +64,13 @@ function getHeaders(needAuth) {
 
 function request(url, method = 'GET', data = null, needAuth = false) {
   return new Promise((resolve, reject) => {
+    const fullUrl = `${BASE_URL}${url}`
     wx.request({
-      url: `${BASE_URL}${url}`,
+      url: fullUrl,
       method,
       data,
       header: getHeaders(needAuth),
+      timeout: REQUEST_TIMEOUT,
       success: (res) => {
         const data = res.data && res.data.detail ? res.data.detail : res.data
         if (res.data && res.data.code === 0) {
@@ -80,9 +84,9 @@ function request(url, method = 'GET', data = null, needAuth = false) {
         }
       },
       fail: (err) => {
-        console.error('request fail:', formatError(err), err)
-        wx.showToast({ title: '网络异常', icon: 'none' })
-        reject(err)
+        const message = formatError(err)
+        console.error('request fail:', method, fullUrl, message, err)
+        reject({ ...(err || {}), message })
       },
     })
   })
