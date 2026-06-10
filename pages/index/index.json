@@ -1,3 +1,5 @@
 {
-  "navigationBarTitleText": "小吉微商城"
+  "navigationBarTitleText": "小吉微商城",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark"
 }

@@ -7,10 +7,22 @@ const {
 } = require('../../utils/request')
 
 Page({
-  data: { product: {}, images: [], selectedSpecIndex: -1, isFavorite: false },
+  data: { productId: '', product: {}, images: [], selectedSpecIndex: -1, isFavorite: false },
 
   onLoad(opt) {
-    if (opt && opt.id) this.loadProduct(opt.id)
+    if (opt && opt.id) {
+      this.setData({ productId: opt.id })
+      this.loadProduct(opt.id)
+    }
+  },
+
+  async onPullDownRefresh() {
+    try {
+      const id = this.data.productId || this.data.product.id
+      if (id) await this.loadProduct(id)
+    } finally {
+      wx.stopPullDownRefresh()
+    }
   },
 
   async loadProduct(id) {

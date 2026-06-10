@@ -50,6 +50,14 @@ Page({
     this.loadData()
   },
 
+  async onPullDownRefresh() {
+    try {
+      if (wx.getStorageSync('token')) await this.loadData()
+    } finally {
+      wx.stopPullDownRefresh()
+    }
+  },
+
   async loadData() {
     try {
       const res = await getAddresses()

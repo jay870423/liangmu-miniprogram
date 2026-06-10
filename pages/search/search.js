@@ -17,6 +17,20 @@ Page({
     this.setData({ history })
   },
 
+  async onPullDownRefresh() {
+    try {
+      const keyword = String(this.data.keyword || '').trim()
+      if (keyword) {
+        this.setData({ products: [], page: 1, loaded: false })
+        await this.doSearch()
+      } else {
+        this.setData({ history: wx.getStorageSync('searchHistory') || [] })
+      }
+    } finally {
+      wx.stopPullDownRefresh()
+    }
+  },
+
   onInput(e) {
     this.setData({ keyword: e.detail.value })
   },

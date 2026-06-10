@@ -87,6 +87,19 @@ Page({
     }
   },
 
+  async onPullDownRefresh() {
+    try {
+      if (this.data.checkoutMode) {
+        await this.loadAddresses()
+        this.calcCheckoutSummary()
+      } else if (this.ensureLogin(false)) {
+        await this.loadOrders(true)
+      }
+    } finally {
+      wx.stopPullDownRefresh()
+    }
+  },
+
   async initCheckout(opt = {}) {
     if (!this.ensureLogin(true)) return
     wx.showLoading({ title: '加载中...', mask: true })

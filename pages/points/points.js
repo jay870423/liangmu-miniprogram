@@ -26,6 +26,16 @@ Page({
     this.loadHistory(true)
   },
 
+  async onPullDownRefresh() {
+    try {
+      if (wx.getStorageSync('token')) {
+        await Promise.all([this.loadSummary(), this.loadHistory(true)])
+      }
+    } finally {
+      wx.stopPullDownRefresh()
+    }
+  },
+
   async loadSummary() {
     try {
       const res = await getPoints()

@@ -22,6 +22,14 @@ Page({
     this.loadData(true)
   },
 
+  async onPullDownRefresh() {
+    try {
+      if (wx.getStorageSync('token')) await this.loadData(true)
+    } finally {
+      wx.stopPullDownRefresh()
+    }
+  },
+
   async loadData(reset = false) {
     if (this.data.loading) return
     const page = reset ? 1 : this.data.page

@@ -14,6 +14,14 @@ Page({
     this.loadCart()
   },
 
+  async onPullDownRefresh() {
+    try {
+      await this.loadCart()
+    } finally {
+      wx.stopPullDownRefresh()
+    }
+  },
+
   async loadCart() {
     try {
       const res = await getCart()

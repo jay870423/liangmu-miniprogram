@@ -27,8 +27,16 @@ Page({
     this.loadCategories()
   },
 
-  onShow() {
-    this.applyPendingCategory()
+  async onShow() {
+    await this.applyPendingCategory()
+  },
+
+  async onPullDownRefresh() {
+    try {
+      await this.loadCategories()
+    } finally {
+      wx.stopPullDownRefresh()
+    }
   },
 
   async loadCategories() {
@@ -40,24 +48,24 @@ Page({
           iconUrl: normalizeAssetUrl(item.icon_url || item.icon),
         }))
         this.setData({ categories })
-        if (!this.applyPendingCategory() && !this.data.currentCateId && categories.length > 0) {
-          this.selectCategory(categories[0].id)
+        if (!await this.applyPendingCategory() && !this.data.currentCateId && categories.length > 0) {
+          await this.selectCategory(categories[0].id)
         } else if (this.data.currentCateId) {
-          this.selectCategory(this.data.currentCateId)
+          await this.selectCategory(this.data.currentCateId)
         }
       }
     } catch (e) { console.error(e) }
   },
 
-  applyPendingCategory() {
+  async applyPendingCategory() {
     const id = wx.getStorageSync('selectedCategoryId')
     if (!id || this.data.categories.length === 0) return false
     wx.removeStorageSync('selectedCategoryId')
-    this.selectCategory(id)
+    await this.selectCategory(id)
     return true
   },
 
-  selectCategory(id) {
+  async selectCategory(id) {
     const cate = this.data.categories.find(c => c.id === id)
     if (!cate) return
     this.setData({
@@ -67,7 +75,7 @@ Page({
       page: 1,
       loaded: false,
     })
-    this.loadProducts(true)
+    await this.loadProducts(true)
   },
 
   async loadProducts(reset = false) {

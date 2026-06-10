@@ -23,10 +23,20 @@ Page({
   onShow() {},
 
   async loadData() {
-    this.loadBanners()
-    this.loadCategories()
-    this.loadNewProducts()
-    this.loadRecommendProducts()
+    await Promise.all([
+      this.loadBanners(),
+      this.loadCategories(),
+      this.loadNewProducts(),
+      this.loadRecommendProducts(),
+    ])
+  },
+
+  async onPullDownRefresh() {
+    try {
+      await this.loadData()
+    } finally {
+      wx.stopPullDownRefresh()
+    }
   },
 
   async loadBanners() {

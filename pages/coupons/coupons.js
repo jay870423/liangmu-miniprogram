@@ -33,6 +33,14 @@ Page({
     this.loadData()
   },
 
+  async onPullDownRefresh() {
+    try {
+      if (wx.getStorageSync('token')) await this.loadData()
+    } finally {
+      wx.stopPullDownRefresh()
+    }
+  },
+
   switchTab(e) {
     const value = e.currentTarget.dataset.value
     if (value === this.data.currentTab) return

@@ -26,6 +26,15 @@ Page({
     if (token) this.loadUserInfo()
   },
 
+  async onPullDownRefresh() {
+    try {
+      const token = wx.getStorageSync('token')
+      if (token) await this.loadUserInfo()
+    } finally {
+      wx.stopPullDownRefresh()
+    }
+  },
+
   async loadUserInfo() {
     try {
       const [userRes, couponRes] = await Promise.all([getUserInfo(), getMyCoupons()])
