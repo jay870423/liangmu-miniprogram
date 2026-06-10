@@ -3,6 +3,7 @@ const {
   formatError,
   getOrders,
   getAddresses,
+  getMyCoupons,
   getProductDetail,
   createOrder,
   payOrder,
@@ -41,9 +42,13 @@ Page({
     checkoutItems: [],
     addresses: [],
     selectedAddress: null,
+    coupons: [],
+    usableCoupons: [],
+    selectedCoupon: null,
     checkoutSummary: {
       total_amount: '0.00',
       freight_amount: '0.00',
+      coupon_amount: '0.00',
       pay_amount: '0.00',
     },
     statusText: {
@@ -90,7 +95,7 @@ Page({
   async onPullDownRefresh() {
     try {
       if (this.data.checkoutMode) {
-        await this.loadAddresses()
+        await Promise.all([this.loadAddresses(), this.loadCoupons()])
         this.calcCheckoutSummary()
       } else if (this.ensureLogin(false)) {
         await this.loadOrders(true)
@@ -127,7 +132,7 @@ Page({
       const normalizedItems = await this.normalizeCheckoutItems(items)
       this.setData({ checkoutItems: normalizedItems })
       this.calcCheckoutSummary(normalizedItems)
-      await this.loadAddresses()
+      await Promise.all([this.loadAddresses(), this.loadCoupons(normalizedItems)])
     } catch (err) {
       wx.showToast({ title: err.message || '结算信息加载失败', icon: 'none' })
       this.loadOrders(true)
@@ -191,14 +196,61 @@ Page({
   calcCheckoutSummary(items = this.data.checkoutItems) {
     const total = items.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 1), 0)
     const freight = items.reduce((sum, item) => sum + Number(item.shipping_fee || 0), 0)
-    const pay = total + freight
+    const coupon = this.data.selectedCoupon
+    const couponAmount = coupon ? Math.min(Number(coupon.discount_amount || 0), total + freight) : 0
+    const pay = Math.max(total + freight - couponAmount, 0)
     this.setData({
       checkoutSummary: {
         total_amount: money(total),
         freight_amount: money(freight),
+        coupon_amount: money(couponAmount),
         pay_amount: money(pay),
       },
     })
+  },
+
+  async loadCoupons(items = this.data.checkoutItems) {
+    try {
+      const res = await getMyCoupons('unused')
+      if (res.code !== 0) return
+      const total = items.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 1), 0)
+      const coupons = (res.data.items || []).map(item => {
+        const discount = Number(item.discount_amount || 0)
+        const minAmount = Number(item.min_order_amount || 0)
+        return {
+          ...item,
+          coupon_id: item.coupon_id || item.couponId || item.id,
+          user_coupon_id: item.user_coupon_id || item.userCouponId || item.id,
+          discount_amount: discount,
+          min_order_amount: minAmount,
+          discount_text: money(discount),
+          min_text: money(minAmount),
+          available: total >= minAmount,
+        }
+      })
+      const usableCoupons = coupons
+        .filter(item => item.available)
+        .sort((a, b) => Number(b.discount_amount || 0) - Number(a.discount_amount || 0))
+      const currentId = this.data.selectedCoupon && this.data.selectedCoupon.user_coupon_id
+      const selectedCoupon = usableCoupons.find(item => item.user_coupon_id === currentId) || usableCoupons[0] || null
+      this.setData({ coupons, usableCoupons, selectedCoupon })
+      this.calcCheckoutSummary(items)
+    } catch (e) {
+      this.setData({ coupons: [], usableCoupons: [], selectedCoupon: null })
+      this.calcCheckoutSummary(items)
+    }
+  },
+
+  selectCoupon(e) {
+    const id = e.currentTarget.dataset.id
+    const selectedCoupon = this.data.usableCoupons.find(item => item.user_coupon_id === id) || null
+    this.setData({ selectedCoupon })
+    this.calcCheckoutSummary()
+  },
+
+  clearCoupon() {
+    this.setData({ selectedCoupon: null })
+    this.calcCheckoutSummary()
   },
 
   chooseAddress(e) {
@@ -233,14 +285,25 @@ Page({
       const orderRes = await createOrder({
         address_id: selectedAddress.id,
         items: orderItems,
+        coupon_id: this.data.selectedCoupon ? this.data.selectedCoupon.coupon_id : '',
       })
       if (orderRes.code !== 0 || !orderRes.data.order_id) {
         throw new Error(orderRes.message || '创建订单失败')
       }
+      wx.hideLoading()
+      try {
+        await this.requestPayment(orderRes.data.order_id)
+      } catch (payErr) {
+        const msg = payErr && payErr.message ? payErr.message : ''
+        if (msg.includes('cancel') || msg.includes('取消')) {
+          await cancelOrder(orderRes.data.order_id).catch(() => null)
+          await this.loadCoupons(checkoutItems)
+          throw new Error('已取消支付，优惠券已退回')
+        }
+        throw payErr
+      }
       await this.removeOrderedCartItems(checkoutItems)
       wx.removeStorageSync('checkoutItems')
-      wx.hideLoading()
-      await this.requestPayment(orderRes.data.order_id)
       this.setData({ checkoutMode: false, currentTab: 'paid', orders: [], page: 1 })
       this.loadOrders(true)
     } catch (err) {

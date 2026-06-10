@@ -39,6 +39,30 @@
     </view>
 
     <view class="checkout-section">
+      <view class="section-row-title">
+        <view class="section-title no-margin">优惠券</view>
+        <view class="coupon-count" wx:if="{{usableCoupons.length > 0}}">可用 {{usableCoupons.length}} 张</view>
+      </view>
+      <view class="coupon-empty" wx:if="{{usableCoupons.length === 0}}">暂无可用优惠券</view>
+      <view class="coupon-list" wx:else>
+        <view
+          class="coupon-option {{selectedCoupon && selectedCoupon.user_coupon_id === item.user_coupon_id ? 'active' : ''}}"
+          wx:for="{{usableCoupons}}"
+          wx:key="user_coupon_id"
+          bindtap="selectCoupon"
+          data-id="{{item.user_coupon_id}}"
+        >
+          <view class="coupon-main">
+            <view class="coupon-name">{{item.name}}</view>
+            <view class="coupon-rule">满 ¥{{item.min_text}} 可用</view>
+          </view>
+          <view class="coupon-amount">-¥{{item.discount_text}}</view>
+        </view>
+        <view class="coupon-clear" wx:if="{{selectedCoupon}}" bindtap="clearCoupon">不使用优惠券</view>
+      </view>
+    </view>
+
+    <view class="checkout-section">
       <view class="fee-row">
         <text>商品金额</text>
         <text>¥{{checkoutSummary.total_amount}}</text>
@@ -46,6 +70,10 @@
       <view class="fee-row">
         <text>运费</text>
         <text>¥{{checkoutSummary.freight_amount}}</text>
+      </view>
+      <view class="fee-row discount" wx:if="{{checkoutSummary.coupon_amount !== '0.00'}}">
+        <text>优惠券</text>
+        <text>-¥{{checkoutSummary.coupon_amount}}</text>
       </view>
       <view class="pay-row">
         <text>实付金额</text>
