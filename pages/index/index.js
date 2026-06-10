@@ -6,6 +6,7 @@ const {
   getHomeCategories,
   getHomeNew,
   getHomeRecommend,
+  getNotificationUnreadCount,
 } = require('../../utils/request')
 
 Page({
@@ -14,13 +15,16 @@ Page({
     categories: [],
     newProducts: [],
     recommendProducts: [],
+    unreadCount: 0,
   },
 
   onLoad() {
     this.loadData()
   },
 
-  onShow() {},
+  onShow() {
+    this.loadUnreadCount()
+  },
 
   async loadData() {
     await Promise.all([
@@ -28,7 +32,23 @@ Page({
       this.loadCategories(),
       this.loadNewProducts(),
       this.loadRecommendProducts(),
+      this.loadUnreadCount(),
     ])
+  },
+
+  async loadUnreadCount() {
+    if (!wx.getStorageSync('token')) {
+      this.setData({ unreadCount: 0 })
+      return
+    }
+    try {
+      const res = await getNotificationUnreadCount()
+      if (res.code === 0) {
+        this.setData({ unreadCount: Number((res.data || {}).count || 0) })
+      }
+    } catch (e) {
+      this.setData({ unreadCount: 0 })
+    }
   },
 
   async onPullDownRefresh() {
@@ -97,7 +117,12 @@ Page({
     wx.navigateTo({ url: '/pages/search/search' })
   },
   goMessages() {
-    wx.showToast({ title: '暂无消息', icon: 'none' })
+    if (!wx.getStorageSync('token')) {
+      wx.showToast({ title: '请先登录后查看消息', icon: 'none' })
+      wx.switchTab({ url: '/pages/my/my' })
+      return
+    }
+    wx.navigateTo({ url: '/pages/messages/messages' })
   },
   goCategory(e) {
     const id = e.currentTarget.dataset.id

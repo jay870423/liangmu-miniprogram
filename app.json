@@ -7,6 +7,7 @@
     "pages/my/my",
     "pages/orders/orders",
     "pages/search/search",
+    "pages/messages/messages",
     "pages/webview/webview",
     "pages/favorites/favorites",
     "pages/addresses/addresses",

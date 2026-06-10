@@ -140,6 +140,13 @@ const getAvailableCoupons = () => request('/coupons', 'GET', null, true)
 const getMyCoupons = (status = 'unused') => request(`/user/coupons?status=${status}`, 'GET', null, true)
 const receiveCoupon = (couponId) => request(`/user/coupons/${couponId}/receive`, 'POST', null, true)
 
+// 通知
+const getNotifications = (page = 1, pageSize = 20) =>
+  request(`/notifications?page=${page}&page_size=${pageSize}`, 'GET', null, true)
+const getNotificationUnreadCount = () => request('/notifications/unread-count', 'GET', null, true)
+const markNotificationRead = (id) => request(`/notifications/${id}/read`, 'PUT', null, true)
+const markAllNotificationsRead = () => request('/notifications/read-all', 'PUT', null, true)
+
 // 用户
 const wxLogin = (code) => request('/user/login', 'POST', { code }, false)
 const bindUserPhone = (code) => request('/user/phone', 'POST', { code }, true)
@@ -184,6 +191,10 @@ module.exports = {
   getAvailableCoupons,
   getMyCoupons,
   receiveCoupon,
+  getNotifications,
+  getNotificationUnreadCount,
+  markNotificationRead,
+  markAllNotificationsRead,
   wxLogin,
   bindUserPhone,
   getUserInfo,

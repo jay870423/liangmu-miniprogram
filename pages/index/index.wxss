@@ -24,7 +24,35 @@
 }
 .search-bar .icon { font-size: 26rpx; }
 .search-bar .txt { font-size: 26rpx; color: #999; }
-.msg-btn { font-size: 36rpx; }
+.msg-btn {
+  position: relative;
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 18rpx;
+  background: rgba(255,255,255,0.16);
+  color: #fff;
+  font-size: 34rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.msg-badge {
+  position: absolute;
+  right: -8rpx;
+  top: -8rpx;
+  min-width: 30rpx;
+  height: 30rpx;
+  padding: 0 8rpx;
+  border-radius: 18rpx;
+  background: #e53935;
+  color: #fff;
+  font-size: 18rpx;
+  line-height: 30rpx;
+  text-align: center;
+  border: 3rpx solid #2d5a27;
+  box-sizing: border-box;
+}
 
 /* 轮播图 */
 .banner {

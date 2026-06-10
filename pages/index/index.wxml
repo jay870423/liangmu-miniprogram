@@ -7,6 +7,7 @@
     </view>
     <view class="msg-btn" bindtap="goMessages">
       <text>💬</text>
+      <view class="msg-badge" wx:if="{{unreadCount > 0}}">{{unreadCount > 99 ? '99+' : unreadCount}}</view>
     </view>
   </view>
 

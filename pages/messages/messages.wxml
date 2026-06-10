@@ -1,0 +1,41 @@
+<view class="page">
+  <view class="toolbar">
+    <view>
+      <view class="title">消息通知</view>
+      <view class="subtitle">{{unreadCount > 0 ? '有 ' + unreadCount + ' 条未读消息' : '暂无未读消息'}}</view>
+    </view>
+    <view class="read-all" bindtap="markAllRead" wx:if="{{messages.length > 0}}">全部已读</view>
+  </view>
+
+  <scroll-view class="message-list" scroll-y bindscrolltolower="loadMore">
+    <view
+      class="message-card {{item.is_read ? 'read' : 'unread'}}"
+      wx:for="{{messages}}"
+      wx:key="id"
+      bindtap="onMessageTap"
+      data-id="{{item.id}}"
+    >
+      <view class="message-icon">{{item.icon}}</view>
+      <view class="message-main">
+        <view class="message-head">
+          <view class="message-title">{{item.title}}</view>
+          <view class="unread-dot" wx:if="{{!item.is_read}}"></view>
+        </view>
+        <view class="message-meta">
+          <text>{{item.type_text}}</text>
+          <text>{{item.time_text}}</text>
+        </view>
+        <view class="message-content">{{item.content}}</view>
+        <view class="message-link" wx:if="{{item.link_type !== 'none' && item.link_value}}">点击查看详情</view>
+      </view>
+    </view>
+
+    <view class="empty" wx:if="{{loaded && messages.length === 0}}">
+      <view class="empty-icon">🔔</view>
+      <view class="empty-title">暂无消息</view>
+      <view class="empty-desc">活动通知、支付完成通知会显示在这里</view>
+    </view>
+    <view class="loading" wx:if="{{loading}}">加载中...</view>
+    <view class="no-more" wx:if="{{loaded && messages.length > 0 && !hasMore}}">没有更多了</view>
+  </scroll-view>
+</view>
